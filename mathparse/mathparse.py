@@ -1,13 +1,11 @@
+"""
+Methods for evaluating mathematical equations in strings.
+"""
 
 
-class Parse(object):
+def parse(string):
     """
-    Solve a mathematical equation contained in a string.
+    Return a solution to the equation in the input string.
     """
 
-    def __call__(self, string):
-        """
-        Return a solution to the equation in the input string.
-        """
-
-        return 0
+    return 0
