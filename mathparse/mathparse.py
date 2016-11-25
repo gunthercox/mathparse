@@ -1,12 +1,28 @@
 """
 Methods for evaluating mathematical equations in strings.
 """
+from __future__ import division
+from decimal import Decimal
 import re
 
 
 def is_int(string):
-    try: 
+    """
+    Return true if string is an integer.
+    """
+    try:
         int(string)
+        return True
+    except ValueError:
+        return False
+
+
+def is_float(string):
+    """
+    Return true if the string is a float.
+    """
+    try:
+        float(string)
         return True
     except ValueError:
         return False
@@ -55,9 +71,38 @@ def to_postfix(tokens):
     """
     Convert a list of evaluatable tokens to postfix format.
     """
-    stack = []
+    prec = {
+        '/': 3,
+        '*': 3,
+        '+': 2,
+        '-': 2,
+        '(': 1
+    }
 
-    return stack
+    postfix = []
+    opstack = []
+
+    for token in tokens:
+        if is_int(token):
+            postfix.append(int(token))
+        elif is_float(token):
+            postfix.append(float(token))
+        elif token == '(':
+            opstack.append(token)
+        elif token == ')':
+            top_token = opstack.pop()
+            while top_token != '(':
+                postfix.append(top_token)
+                top_token = opstack.pop()
+        else:
+            while (opstack != []) and (prec[opstack[-1]] >= prec[token]):
+                postfix.append(opstack.pop())
+            opstack.append(token)
+
+    while opstack != []:
+        postfix.append(opstack.pop())
+
+    return postfix
 
 
 def evaluate_postfix(tokens):
@@ -65,18 +110,42 @@ def evaluate_postfix(tokens):
     Given a list of evaluatable tokens in postfix format,
     calculate a solution.
     """
+    stack = []
 
-    return 0
+    for token in tokens:
+        total = None
+
+        if is_int(token) or is_float(token):
+            stack.append(token)
+        elif len(stack):
+            b = stack.pop()
+            a = stack.pop()
+            if token == '+':
+                total = a + b
+            elif token == '-':
+                total = a - b
+            elif token == '*':
+                total = a * b
+            elif token == '/':
+                total = Decimal(str(a)) / Decimal(str(b))
+            else:
+                raise Exception('Unknown value {}'.format(token))
+
+        if total is not None:
+            stack.append(total)
+
+    return stack.pop()
 
 
 def parse(string, language=None):
     """
     Return a solution to the equation in the input string.
     """
-
     if language:
         string = replace_word_tokens(string, language)
 
     tokens = to_postfix(string.split())
+
+    print('TOKENS: ', tokens)
 
     return evaluate_postfix(tokens)
