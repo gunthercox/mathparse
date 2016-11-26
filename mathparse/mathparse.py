@@ -71,7 +71,7 @@ def to_postfix(tokens):
     """
     Convert a list of evaluatable tokens to postfix format.
     """
-    prec = {
+    precedence = {
         '/': 3,
         '*': 3,
         '+': 2,
@@ -95,7 +95,7 @@ def to_postfix(tokens):
                 postfix.append(top_token)
                 top_token = opstack.pop()
         else:
-            while (opstack != []) and (prec[opstack[-1]] >= prec[token]):
+            while (opstack != []) and (precedence[opstack[-1]] >= precedence[token]):
                 postfix.append(opstack.pop())
             opstack.append(token)
 
@@ -144,8 +144,9 @@ def parse(string, language=None):
     if language:
         string = replace_word_tokens(string, language)
 
-    tokens = to_postfix(string.split())
+    # Parenthesis must have space around them to be tokenized properly
+    string = string.replace('(', ' ( ')
 
-    print('TOKENS: ', tokens)
+    tokens = to_postfix(string.split())
 
     return evaluate_postfix(tokens)
