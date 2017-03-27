@@ -1,8 +1,9 @@
-'''
-Utility methods for getting math word terms.
-'''
+# -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
+"""
+Utility methods for getting math word terms.
+"""
 
 MATH_WORDS = {
     'ENG': {
@@ -315,11 +316,11 @@ class InvalidLanguageCodeException(Exception):
 
 
 def words_for_language(language_code):
-    '''
+    """
     Return the math words for a language code.
     The language_code should be an ISO 639-2 language code.
     https://www.loc.gov/standards/iso639-2/php/code_list.php
-    '''
+    """
 
     if language_code not in LANGUAGE_CODES:
         message = '{} is not an available language code'.format(language_code)
