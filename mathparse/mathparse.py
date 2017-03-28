@@ -54,8 +54,9 @@ def replace_word_tokens(string, language):
 
     words = words_for_language(language)
 
-    # Replace operator words with numberic operators
-    operators = words['operators']
+    # Replace operator words with numeric operators
+    operators = words['binary_operators'].copy()
+    operators.update(words['unary_operators'])
     for operator in operators:
         if operator in string:
             string = string.replace(operator, operators[operator])
@@ -66,7 +67,7 @@ def replace_word_tokens(string, language):
         if number in string:
             string = string.replace(number, str(numbers[number]))
 
-    # Replace scaling multipliers with numberic values
+    # Replace scaling multipliers with numeric values
     scales = words['scales']
     for scale in scales:
         if scale in string:
@@ -175,6 +176,7 @@ def parse(string, language=None):
 
     # Parenthesis must have space around them to be tokenized properly
     string = string.replace('(', ' ( ')
+    string = string.replace(')', ' ) ')
 
     tokens = to_postfix(string.split())
 

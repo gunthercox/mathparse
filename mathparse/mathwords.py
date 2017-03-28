@@ -8,13 +8,16 @@ Utility methods for getting math word terms.
 
 MATH_WORDS = {
     'ENG': {
-        'operators': {
+        'unary_operators': {
+            'squared': '^ 2',
+            'cubed': '^ 3',
+            'square root of': 'sqrt'
+        },
+        'binary_operators': {
             'plus': '+',
             'divided by': '/',
             'minus': '-',
             'times': '*',
-            'squared': '^ 2',
-            'cubed': '^ 3',
             'to the power of': '^'
         },
         'numbers': {
@@ -55,7 +58,7 @@ MATH_WORDS = {
         }
     },
     'FRE': {
-        'operators': {
+        'binary_operators': {
             'plus': '+',
             'divisé par': '/',
             'moins': '-',
@@ -102,7 +105,7 @@ MATH_WORDS = {
         }
     },
     'GER': {
-        'operators': {
+        'binary_operators': {
             'plus': '+',
             'geteilt durch': '/',
             'geteilt': '/',
@@ -154,7 +157,7 @@ MATH_WORDS = {
         }
     },
     'ITA': {
-        'operators': {
+        'binary_operators': {
             'più': '+',
             'diviso': '/',
             'meno': '-',
@@ -201,7 +204,7 @@ MATH_WORDS = {
         }
     },
     'MAR': {
-        'operators': {
+        'binary_operators': {
             'बेरीज': '+',
             'भागाकार': '/',
             'वजाबाकी': '-',
@@ -250,7 +253,7 @@ MATH_WORDS = {
         }
     },
     'RUS': {
-        'operators': {
+        'binary_operators': {
             'плюс': '+',
             'разделить': '/',
             'деленное на': '/',
