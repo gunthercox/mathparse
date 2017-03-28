@@ -2,6 +2,9 @@
 mathparse
 =========
 
+.. image:: https://travis-ci.org/gunthercox/mathparse.svg?branch=master
+    :target: https://travis-ci.org/gunthercox/mathparse
+
 The mathparse library is a Python module designed to evaluate mathematical equations contained in strings.
 
 Here are a few examples:
