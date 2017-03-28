@@ -53,7 +53,7 @@ class PositiveFloatTestCase(TestCase):
         self.assertEqual(result, 1.1)
 
     def test_subtraction(self):
-        result = mathparse.parse('30 - 29')
+        result = mathparse.parse('30.1 - 29.1')
 
         self.assertEqual(result, 1)
 

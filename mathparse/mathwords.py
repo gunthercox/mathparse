@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
+import math
 
 """
 Utility methods for getting math word terms.
@@ -304,7 +305,16 @@ MATH_WORDS = {
     }
 }
 
+
 LANGUAGE_CODES = list(MATH_WORDS.keys())
+
+
+FUNCTIONS = {
+    'sqrt': math.sqrt,
+
+    # Most people assume a log of base 10 when a base is not specified
+    'log': math.log10
+}
 
 
 class InvalidLanguageCodeException(Exception):
