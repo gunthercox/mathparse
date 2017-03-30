@@ -16,6 +16,12 @@ class BooleanChecksTestCase(TestCase):
     def test_is_not_float(self):
         self.assertFalse(mathparse.is_float('5'))
 
+    def test_is_constant(self):
+        self.assertTrue(mathparse.is_constant('pi'))
+
+    def test_is_not_constant(self):
+        self.assertFalse(mathparse.is_constant('+'))
+
     def test_is_unary(self):
         self.assertTrue(mathparse.is_unary('sqrt'))
 

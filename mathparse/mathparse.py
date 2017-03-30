@@ -36,6 +36,14 @@ def is_float(string):
         return False
 
 
+def is_constant(string):
+    """
+    Return true if the string is a mathematical constant.
+    """
+    from .mathwords import CONSTANTS
+    return CONSTANTS.get(string, False)
+
+
 def is_unary(string):
     """
     Return true if the string is a defined unary mathematical operator function.
@@ -50,6 +58,16 @@ def is_binary(string):
     """
     from .mathwords import BINARY_OPERATORS
     return string in BINARY_OPERATORS
+
+def is_symbol(string):
+    """
+    Return true if the string is a mathematical symbol.
+    """
+    return (
+        is_int(string) or is_float(string) or
+        is_constant(string) or is_unary(string) or
+        is_binary(string)
+    )
 
 def is_word(word, language):
     """
@@ -105,6 +123,8 @@ def to_postfix(tokens):
     """
     Convert a list of evaluatable tokens to postfix format.
     """
+    from .mathwords import CONSTANTS
+
     precedence = {
         '/': 4,
         '*': 4,
@@ -122,6 +142,8 @@ def to_postfix(tokens):
             postfix.append(int(token))
         elif is_float(token):
             postfix.append(float(token))
+        elif token in CONSTANTS:
+            postfix.append(CONSTANTS[token])
         elif is_unary(token):
             opstack.append(token)
         elif token == '(':
@@ -153,7 +175,7 @@ def evaluate_postfix(tokens):
     for token in tokens:
         total = None
 
-        if is_int(token) or is_float(token):
+        if is_int(token) or is_float(token) or is_constant(token):
             stack.append(token)
         elif is_unary(token):
             a = stack.pop()
@@ -241,13 +263,13 @@ def extract_expression(dirty_string, language):
     end_index = len(tokens)
 
     for part in tokens:
-        if is_int(part) or is_float(part) or is_unary(part) or is_binary(part) or is_word(part, language):
+        if is_symbol(part) or is_word(part, language):
             break
         else:
             start_index += 1
 
     for part in reversed(tokens):
-        if is_int(part) or is_float(part) or is_unary(part) or is_binary(part) or is_word(part, language):
+        if is_symbol(part) or is_word(part, language):
             break
         else:
             end_index -= 1

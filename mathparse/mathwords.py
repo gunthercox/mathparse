@@ -316,6 +316,12 @@ MATH_WORDS = {
 LANGUAGE_CODES = list(MATH_WORDS.keys())
 
 
+CONSTANTS = {
+    'pi': 3.141693,
+    'e': 2.718281
+}
+
+
 FUNCTIONS = {
     'sqrt': math.sqrt,
 
