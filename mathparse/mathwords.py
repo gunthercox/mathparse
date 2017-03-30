@@ -322,7 +322,7 @@ CONSTANTS = {
 }
 
 
-FUNCTIONS = {
+UNARY_FUNCTIONS = {
     'sqrt': math.sqrt,
 
     # Most people assume a log of base 10 when a base is not specified

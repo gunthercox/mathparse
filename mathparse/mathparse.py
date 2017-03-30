@@ -48,8 +48,8 @@ def is_unary(string):
     """
     Return true if the string is a defined unary mathematical operator function.
     """
-    from .mathwords import FUNCTIONS
-    return string in FUNCTIONS
+    from .mathwords import UNARY_FUNCTIONS
+    return string in UNARY_FUNCTIONS
 
 
 def is_binary(string):
@@ -66,7 +66,8 @@ def is_symbol(string):
     return (
         is_int(string) or is_float(string) or
         is_constant(string) or is_unary(string) or
-        is_binary(string)
+        is_binary(string) or
+        (string == '(') or (string == ')')
     )
 
 def is_word(word, language):
@@ -169,7 +170,7 @@ def evaluate_postfix(tokens):
     Given a list of evaluatable tokens in postfix format,
     calculate a solution.
     """
-    from .mathwords import FUNCTIONS
+    from .mathwords import UNARY_FUNCTIONS
     stack = []
 
     for token in tokens:
@@ -179,7 +180,7 @@ def evaluate_postfix(tokens):
             stack.append(token)
         elif is_unary(token):
             a = stack.pop()
-            total = FUNCTIONS[token](a)
+            total = UNARY_FUNCTIONS[token](a)
         elif len(stack):
             b = stack.pop()
             a = stack.pop()
