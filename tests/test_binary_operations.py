@@ -14,6 +14,11 @@ class PositiveIntegerTestCase(TestCase):
 
         self.assertEqual(result, 8)
 
+    def test_addition_words_large(self):
+        result = mathparse.parse('four thousand two hundred one plus five hundred', language='ENG')
+
+        self.assertEqual(result, 4701)
+
     def test_subtraction(self):
         result = mathparse.parse('30 - 20')
 

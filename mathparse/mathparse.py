@@ -4,6 +4,7 @@ Methods for evaluating mathematical equations in strings.
 from __future__ import division
 from decimal import Decimal
 import re
+from . import mathwords
 
 
 class PostfixTokenEvaluationException(Exception):
@@ -40,24 +41,21 @@ def is_constant(string):
     """
     Return true if the string is a mathematical constant.
     """
-    from .mathwords import CONSTANTS
-    return CONSTANTS.get(string, False)
+    return mathwords.CONSTANTS.get(string, False)
 
 
 def is_unary(string):
     """
     Return true if the string is a defined unary mathematical operator function.
     """
-    from .mathwords import UNARY_FUNCTIONS
-    return string in UNARY_FUNCTIONS
+    return string in mathwords.UNARY_FUNCTIONS
 
 
 def is_binary(string):
     """
     Return true if the string is a defined binary operator.
     """
-    from .mathwords import BINARY_OPERATORS
-    return string in BINARY_OPERATORS
+    return string in mathwords.BINARY_OPERATORS
 
 def is_symbol(string):
     """
@@ -74,9 +72,7 @@ def is_word(word, language):
     """
     Return true if the word is a math word for the specified language.
     """
-    from .mathwords import words_for_language
-
-    words = words_for_language(language)
+    words = mathwords.words_for_language(language)
 
     return word in words
 
@@ -86,9 +82,7 @@ def replace_word_tokens(string, language):
     return the string with the words replaced with
     an operational equivalent.
     """
-    from .mathwords import word_groups_for_language
-
-    words = word_groups_for_language(language)
+    words = mathwords.word_groups_for_language(language)
 
     # Replace operator words with numeric operators
     operators = words['binary_operators'].copy()
@@ -105,18 +99,30 @@ def replace_word_tokens(string, language):
 
     # Replace scaling multipliers with numeric values
     scales = words['scales']
+    end_index_characters = mathwords.BINARY_OPERATORS
+    end_index_characters.add('(')
     for scale in scales:
         if scale in string:
-            for match in re.finditer(scale, string):
-                index = match.start() - 1
-                while is_int(string[index]) and index >= 0:
-                    index -= 1
-                index -= 1
+            matches = list(re.finditer(scale, string))
+            while matches:
+                start_index = matches[0].start() - 1
+                end_index = len(string)
 
-                string = string[:index] + '(' + string[index:]
+                while is_int(string[start_index]) and start_index >= 0:
+                    start_index -= 1
+                start_index -= 1
 
-                string = string.replace(scale, '* ' + str(scales[scale]) + ')')
+                end_index = string.find(' ', start_index) + 1
+                end_index = string.find(' ', end_index) + 1
 
+                add = ' +'
+                if string[end_index] in end_index_characters:
+                    add = ''
+
+                string = string[:start_index] + '(' + string[start_index:]
+                string = string.replace(scale, '* ' + str(scales[scale]) + ')' + add, 1)
+
+                matches = list(re.finditer(scale, string))
     return string
 
 
@@ -124,8 +130,6 @@ def to_postfix(tokens):
     """
     Convert a list of evaluatable tokens to postfix format.
     """
-    from .mathwords import CONSTANTS
-
     precedence = {
         '/': 4,
         '*': 4,
@@ -143,8 +147,8 @@ def to_postfix(tokens):
             postfix.append(int(token))
         elif is_float(token):
             postfix.append(float(token))
-        elif token in CONSTANTS:
-            postfix.append(CONSTANTS[token])
+        elif token in mathwords.CONSTANTS:
+            postfix.append(mathwords.CONSTANTS[token])
         elif is_unary(token):
             opstack.append(token)
         elif token == '(':
@@ -170,7 +174,6 @@ def evaluate_postfix(tokens):
     Given a list of evaluatable tokens in postfix format,
     calculate a solution.
     """
-    from .mathwords import UNARY_FUNCTIONS
     stack = []
 
     for token in tokens:
@@ -180,7 +183,7 @@ def evaluate_postfix(tokens):
             stack.append(token)
         elif is_unary(token):
             a = stack.pop()
-            total = UNARY_FUNCTIONS[token](a)
+            total = mathwords.UNARY_FUNCTIONS[token](a)
         elif len(stack):
             b = stack.pop()
             a = stack.pop()
@@ -211,8 +214,6 @@ def tokenize(string, language=None, escape='___'):
     """
     Given a string, return a list of math symbol tokens
     """
-    from .mathwords import words_for_language
-
     # Set all words to lowercase
     string = string.lower()
 
@@ -226,7 +227,7 @@ def tokenize(string, language=None, escape='___'):
     string = string.replace(')', ' ) ')
 
     if language:
-        words = words_for_language(language)
+        words = mathwords.words_for_language(language)
 
         for phrase in words:
             escaped_phrase = phrase.replace(' ', escape)
