@@ -102,27 +102,25 @@ def replace_word_tokens(string, language):
     end_index_characters = mathwords.BINARY_OPERATORS
     end_index_characters.add('(')
     for scale in scales:
-        if scale in string:
+        for _ in range(string.count(scale)):
             matches = list(re.finditer(scale, string))
-            while matches:
-                start_index = matches[0].start() - 1
-                end_index = len(string)
 
-                while is_int(string[start_index]) and start_index >= 0:
-                    start_index -= 1
+            start_index = matches[0].start() - 1
+            end_index = len(string)
+
+            while is_int(string[start_index]) and start_index >= 0:
                 start_index -= 1
+            start_index -= 1
 
-                end_index = string.find(' ', start_index) + 1
-                end_index = string.find(' ', end_index) + 1
+            end_index = string.find(' ', start_index) + 1
+            end_index = string.find(' ', end_index) + 1
 
-                add = ' +'
-                if string[end_index] in end_index_characters:
-                    add = ''
+            add = ' +'
+            if string[end_index] in end_index_characters:
+                add = ''
 
-                string = string[:start_index] + '(' + string[start_index:]
-                string = string.replace(scale, '* ' + str(scales[scale]) + ')' + add, 1)
-
-                matches = list(re.finditer(scale, string))
+            string = string[:start_index] + '(' + string[start_index:]
+            string = string.replace(scale, '* ' + str(scales[scale]) + ')' + add, 1)
     return string
 
 
