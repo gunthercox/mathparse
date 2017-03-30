@@ -31,7 +31,7 @@ def is_float(string):
     """
     try:
         float(string)
-        return True
+        return '.' in string
     except ValueError:
         return False
 
@@ -194,7 +194,7 @@ def tokenize(string, language=None, escape='___'):
     string = string.lower()
 
     # Ignore punctuation
-    if not string[-1].isalnum():
+    if len(string) and not string[-1].isalnum():
         character = string[-1]
         string = string[:-1] + ' ' + character
 
