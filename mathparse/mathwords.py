@@ -6,6 +6,10 @@ import math
 Utility methods for getting math word terms.
 """
 
+BINARY_OPERATORS = {
+    '^', '*', '/', '+', '-'
+}
+
 MATH_WORDS = {
     'ENG': {
         'unary_operators': {
@@ -328,9 +332,9 @@ class InvalidLanguageCodeException(Exception):
     pass
 
 
-def words_for_language(language_code):
+def word_groups_for_language(language_code):
     """
-    Return the math words for a language code.
+    Return the math word groups for a language code.
     The language_code should be an ISO 639-2 language code.
     https://www.loc.gov/standards/iso639-2/php/code_list.php
     """
@@ -340,3 +344,17 @@ def words_for_language(language_code):
         raise InvalidLanguageCodeException(message)
 
     return MATH_WORDS[language_code]
+
+def words_for_language(language_code):
+    """
+    Return the math words for a language code.
+    The language_code should be an ISO 639-2 language code.
+    https://www.loc.gov/standards/iso639-2/php/code_list.php
+    """
+    word_groups = word_groups_for_language(language_code)
+    words = []
+
+    for group in word_groups:
+        words.extend(word_groups[group].keys())
+
+    return words

@@ -44,15 +44,32 @@ def is_unary(string):
     return string in FUNCTIONS
 
 
+def is_binary(string):
+    """
+    Return true if the string is a defined binary operator.
+    """
+    from .mathwords import BINARY_OPERATORS
+    return string in BINARY_OPERATORS
+
+def is_word(word, language):
+    """
+    Return true if the word is a math word for the specified language.
+    """
+    from .mathwords import words_for_language
+
+    words = words_for_language(language)
+
+    return word in words
+
 def replace_word_tokens(string, language):
     """
     Given a string and an ISO 639-2 language code,
     return the string with the words replaced with
     an operational equivalent.
     """
-    from .mathwords import words_for_language
+    from .mathwords import word_groups_for_language
 
-    words = words_for_language(language)
+    words = word_groups_for_language(language)
 
     # Replace operator words with numeric operators
     operators = words['binary_operators'].copy()
@@ -167,6 +184,39 @@ def evaluate_postfix(tokens):
     return stack.pop()
 
 
+def tokenize(string, language=None, escape='___'):
+    """
+    Given a string, return a list of math symbol tokens
+    """
+    from .mathwords import words_for_language
+
+    # Set all words to lowercase
+    string = string.lower()
+
+    # Ignore punctuation
+    if not string[-1].isalnum():
+        character = string[-1]
+        string = string[:-1] + ' ' + character
+
+    # Parenthesis must have space around them to be tokenized properly
+    string = string.replace('(', ' ( ')
+    string = string.replace(')', ' ) ')
+
+    if language:
+        words = words_for_language(language)
+
+        for phrase in words:
+            escaped_phrase = phrase.replace(' ', escape)
+            string = string.replace(phrase, escaped_phrase)
+
+    tokens = string.split()
+
+    for index, token in enumerate(tokens):
+        tokens[index] = token.replace(escape, ' ')
+
+    return tokens
+
+
 def parse(string, language=None):
     """
     Return a solution to the equation in the input string.
@@ -174,10 +224,32 @@ def parse(string, language=None):
     if language:
         string = replace_word_tokens(string, language)
 
-    # Parenthesis must have space around them to be tokenized properly
-    string = string.replace('(', ' ( ')
-    string = string.replace(')', ' ) ')
+    tokens = tokenize(string)
+    postfix = to_postfix(tokens)
 
-    tokens = to_postfix(string.split())
+    return evaluate_postfix(postfix)
 
-    return evaluate_postfix(tokens)
+
+def extract_expression(dirty_string, language):
+    """
+    Give a string such as: "What is 4 + 4?"
+    Return the string "4 + 4"
+    """
+    tokens = tokenize(dirty_string, language)
+
+    start_index = 0
+    end_index = len(tokens)
+
+    for part in tokens:
+        if is_int(part) or is_float(part) or is_unary(part) or is_binary(part) or is_word(part, language):
+            break
+        else:
+            start_index += 1
+
+    for part in reversed(tokens):
+        if is_int(part) or is_float(part) or is_unary(part) or is_binary(part) or is_word(part, language):
+            break
+        else:
+            end_index -= 1
+
+    return ' '.join(tokens[start_index:end_index])
