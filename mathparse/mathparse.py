@@ -3,8 +3,8 @@ Methods for evaluating mathematical equations in strings.
 """
 from __future__ import division
 from decimal import Decimal
-import re
 from . import mathwords
+import re
 
 class PostfixTokenEvaluationException(Exception):
     """
@@ -75,6 +75,16 @@ def is_word(word, language):
 
     return word in words
 
+def find_word_groups(string, words):
+    """
+    Find matches for words in the format "3 thousand 6 hundred 2".
+    The words parameter should be the list of words to check for such as "hundred".
+    """
+    scale_pattern = '|'.join(words)
+    regex = re.compile(r'(?:\d+\s(?:' + scale_pattern + r')*\s*)+')
+    result = regex.findall(string)
+    return result
+
 def replace_word_tokens(string, language):
     """
     Given a string and an ISO 639-2 language code,
@@ -100,11 +110,14 @@ def replace_word_tokens(string, language):
     scales = words['scales']
     end_index_characters = mathwords.BINARY_OPERATORS
     end_index_characters.add('(')
+
+    word_matches = find_word_groups(string, scales.keys())
+    for match in word_matches:
+        string = string.replace(match, '(' + match + ')')
+
     for scale in scales:
         for _ in range(string.count(scale)):
-            matches = list(re.finditer(scale, string))
-
-            start_index = matches[0].start() - 1
+            start_index = string.find(scale) - 1
             end_index = len(string)
 
             while is_int(string[start_index]) and start_index >= 0:
@@ -114,12 +127,14 @@ def replace_word_tokens(string, language):
             end_index = string.find(' ', start_index) + 1
             end_index = string.find(' ', end_index) + 1
 
-            add = ' +'
+            add = ' + '
             if string[end_index] in end_index_characters:
                 add = ''
 
             string = string[:start_index] + '(' + string[start_index:]
             string = string.replace(scale, '* ' + str(scales[scale]) + ')' + add, 1)
+
+    print('string', string)
     return string
 
 
