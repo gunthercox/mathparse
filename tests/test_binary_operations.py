@@ -64,6 +64,11 @@ class PositiveIntegerTestCase(TestCase):
 
         self.assertEqual(result, 'undefined')
 
+    def test_division_words_large(self):
+        result = mathparse.parse('one thousand two hundred four divided by one hundred', language='ENG')
+
+        self.assertEqual(str(result), '12.04')
+
 
 class PositiveFloatTestCase(TestCase):
 
