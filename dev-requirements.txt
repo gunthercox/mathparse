@@ -1,0 +1,7 @@
+flake8
+mock
+nose
+pip
+twine
+sphinx>=1.6,<1.7
+sphinx_rtd_theme

@@ -1,16 +1,26 @@
-.. mathparse documentation master file, created by
-   sphinx-quickstart on Tue Aug  8 07:11:36 2017.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+.. mathparse documentation index
 
-Welcome to mathparse's documentation!
-=====================================
+Mathparse Documentation
+=======================
+
+.. automodule:: mathparse
+   :members:
+
+Parsing strings
++++++++++++++++
+
+.. automodule:: mathparse.mathparse
+   :members:
+
+The mathwords utility module
+++++++++++++++++++++++++++++
+
+.. automodule:: mathparse.mathwords
+   :members:
 
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
-
-
 
 Indices and tables
 ==================

@@ -6,7 +6,6 @@ from decimal import Decimal
 import re
 from . import mathwords
 
-
 class PostfixTokenEvaluationException(Exception):
     """
     Exception to be raised when a language code is given that
