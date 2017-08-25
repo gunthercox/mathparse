@@ -22,4 +22,6 @@ class EnglishWordTokenTestCase(TestCase):
     def test_double_digit_multiplier_for_scale(self):
         result = mathparse.replace_word_tokens('fifty thousand + 1', language='ENG')
 
-        self.assertEqual(result, '(50 * 1000) + 1')
+        # Note: this ends up with double parentheses because it is both a
+        # scaled number ("thousand") and a word group ("five thousand")
+        self.assertEqual(result, '((5 * 1000)) + 30')
