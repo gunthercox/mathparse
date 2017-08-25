@@ -17,4 +17,6 @@ class EnglishWordTokenTestCase(TestCase):
     def test_thousand(self):
         result = mathparse.replace_word_tokens('five thousand + 30', language='ENG')
 
-        self.assertEqual(result, '(5 * 1000) + 30')
+        # Note: this ends up with double parentheses because it is both a
+        # scaled number ("thousand") and a word group ("five thousand")
+        self.assertEqual(result, '((5 * 1000)) + 30')
