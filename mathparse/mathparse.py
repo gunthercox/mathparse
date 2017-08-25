@@ -97,13 +97,13 @@ def replace_word_tokens(string, language):
     # Replace operator words with numeric operators
     operators = words['binary_operators'].copy()
     operators.update(words['unary_operators'])
-    for operator in operators:
+    for operator in list(operators.keys()):
         if operator in string:
             string = string.replace(operator, operators[operator])
 
     # Replace number words with numeric values
     numbers = words['numbers']
-    for number in numbers:
+    for number in list(numbers.keys()):
         if number in string:
             string = string.replace(number, str(numbers[number]))
 
@@ -112,12 +112,12 @@ def replace_word_tokens(string, language):
     end_index_characters = mathwords.BINARY_OPERATORS
     end_index_characters.add('(')
 
-    word_matches = find_word_groups(string, scales.keys())
+    word_matches = find_word_groups(string, list(scales.keys()))
 
     for match in word_matches:
         string = string.replace(match, '(' + match + ')')
 
-    for scale in scales.keys():
+    for scale in list(scales.keys()):
         for _ in range(string.count(scale)):
             start_index = string.find(scale) - 1
             end_index = len(string)
