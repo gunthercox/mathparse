@@ -81,7 +81,8 @@ def find_word_groups(string, words):
     The words parameter should be the list of words to check for such as "hundred".
     """
     scale_pattern = '|'.join(words)
-    regex = re.compile(r'(?:\d+\s(?:' + scale_pattern + r')*\s*)+')
+    # For example: (?:(?:\d+)\s+(?:hundred|thousand|million)*\s*)+(?:\d+|hundred|thousand|million)+
+    regex = re.compile(r'(?:(?:\d+)\s+(?:' + scale_pattern + r')*\s*)+(?:\d+|' + scale_pattern + r')+')
     result = regex.findall(string)
     return result
 
@@ -112,6 +113,7 @@ def replace_word_tokens(string, language):
     end_index_characters.add('(')
 
     word_matches = find_word_groups(string, scales.keys())
+
     for match in word_matches:
         string = string.replace(match, '(' + match + ')')
 
