@@ -28,3 +28,9 @@ Indices and tables
 * :ref:`genindex`
 * :ref:`modindex`
 * :ref:`search`
+
+----
+
+A special thanks to `Griffin Cox`_ for the design of the Mathparse logo.
+
+.. _`Griffin Cox`: https://github.com/griffincx
