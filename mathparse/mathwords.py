@@ -97,8 +97,11 @@ MATH_WORDS = {
             'cinquante': 50,
             'soixante': 60,
             'soixante-dix': 70,
+            'septante': 70,
             'quatre-vingts': 80,
-            'quatre-vingt-dix': 90
+            'huitante': 80,
+            'quatre-vingt-dix': 90,
+            'nonante': 90
         },
         'scales': {
             'cent': 100,
