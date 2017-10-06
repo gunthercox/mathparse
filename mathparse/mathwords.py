@@ -25,6 +25,7 @@ MATH_WORDS = {
             'to the power of': '^'
         },
         'numbers': {
+            'zero': 0,
             'one': 1,
             'two': 2,
             'three': 3,
