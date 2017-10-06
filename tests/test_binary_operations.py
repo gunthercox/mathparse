@@ -54,6 +54,16 @@ class PositiveIntegerTestCase(TestCase):
 
         self.assertEqual(result, 50001)
 
+    def test_division_by_zero(self):
+        result = mathparse.parse('42 / 0', language='ENG')
+
+        self.assertEqual(result, 'undefined')
+
+    def test_division_by_zero_words(self):
+        result = mathparse.parse('six divided by zero', language='ENG')
+
+        self.assertEqual(result, 'undefined')
+
 
 class PositiveFloatTestCase(TestCase):
 

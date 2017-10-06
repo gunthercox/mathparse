@@ -191,7 +191,10 @@ def evaluate_postfix(tokens):
             elif token == '^':
                 total = a ** b
             elif token == '/':
-                total = Decimal(str(a)) / Decimal(str(b))
+                if Decimal(str(b)) == 0:
+                    total = 'undefined'
+                else:
+                    total = Decimal(str(a)) / Decimal(str(b))
             else:
                 raise PostfixTokenEvaluationException('Unknown token {}'.format(token))
 
