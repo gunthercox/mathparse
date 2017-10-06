@@ -49,6 +49,11 @@ class PositiveIntegerTestCase(TestCase):
 
         self.assertEqual(result, 3)
 
+    def test_double_digit_multiplier_for_scale_addition(self):
+        result = mathparse.parse('fifty thousand plus one', language='ENG')
+
+        self.assertEqual(result, 50001)
+
     def test_division_by_zero(self):
         result = mathparse.parse('42 / 0', language='ENG')
 

@@ -105,11 +105,9 @@ def replace_word_tokens(string, language):
             matches = list(re.finditer(scale, string))
 
             start_index = matches[0].start() - 1
-            end_index = len(string)
 
-            while is_int(string[start_index]) and start_index >= 0:
+            while is_int(string[start_index - 1]) and start_index > 0:
                 start_index -= 1
-            start_index -= 1
 
             end_index = string.find(' ', start_index) + 1
             end_index = string.find(' ', end_index) + 1
