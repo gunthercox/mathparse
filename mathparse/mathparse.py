@@ -118,7 +118,7 @@ def replace_word_tokens(string, language):
         string = string.replace(match, '(' + match + ')')
 
     for scale in list(scales.keys()):
-        for _ in range(string.count(scale)):
+        for _ in range(0, string.count(scale)):
             start_index = string.find(scale) - 1
             end_index = len(string)
 
@@ -134,6 +134,8 @@ def replace_word_tokens(string, language):
 
             string = string[:start_index] + '(' + string[start_index:]
             string = string.replace(scale, '* ' + str(scales[scale]) + ')' + add, 1)
+
+    string = string.replace(') (', ') + (')
 
     return string
 
