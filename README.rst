@@ -22,6 +22,13 @@ Here are a few examples:
    mathparse.parse('(seven * nine) + 8 - (45 plus two)', language='ENG')
    >>> 24
 
+Installation
+============
+
+.. code-block:: bash
+
+   pip install mathparse
+
 Language support
 ================
 
