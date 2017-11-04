@@ -9,6 +9,9 @@ os:
   - linux
   - windows
 
+install:
+  - pip install coveralls
+
 script:
   - nosetests --with-coverage --cover-package=mathparse
 
