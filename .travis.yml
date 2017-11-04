@@ -20,6 +20,7 @@ after_success:
 
 deploy:
   provider: pypi
+  distributions: "sdist bdist_wheel"
   user: $PYPI_USERNAME
   password: $PYPI_PASSWORD
   on:
