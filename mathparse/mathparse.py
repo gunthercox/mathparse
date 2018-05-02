@@ -86,6 +86,82 @@ def find_word_groups(string, words):
     result = regex.findall(string)
     return result
 
+
+def replace_word_tokens_simplified_chinese(string):
+    """
+    simplified Chinese version:
+    Given a string and an ISO 639-2 language code,
+    return the string with the words replaced with
+    an operational equivalent.
+    """
+    words = mathwords.word_groups_for_language('SIMPLIFIED_CHINESE')
+
+    # Replace operator words with numeric operators
+    operators = words['binary_operators'].copy()
+    operators.update(words['unary_operators'])
+    for operator in list(operators.keys()):
+        if operator in string:
+            # 中文没有分隔符，后面需要靠分隔符分割式子，每次识别一个符号都将其分开来
+            string = string.replace(operator, operators[operator]+' ')
+
+    # chinese_scales用list的原因是为了保持从大到小的顺序，亿、万、千...
+    digits = set(words['numbers'].keys())
+    scales = list(words['scales'].keys())
+    digits_scales = words['numbers']
+    digits_scales.update(words['scales'])
+
+    # 九千八百万九千八百——> 98009800
+    def chinese_string_to_num(str):
+        if str is '':
+            return 0
+
+        if str in digits:
+            return digits_scales[str]
+
+        digits_scales.update(words['scales'])
+
+        for scale in scales:
+            index = str.find(scale)
+            if index >= 0:
+                t1 = chinese_string_to_num(str[:index])
+                t2 = digits_scales[scale]
+                t3 = chinese_string_to_num(str[index + 1:])
+                return t1 * t2 + t3
+        else:
+            return digits_scales[str]
+
+    # 扫描看有没有汉字数字，有转化为阿拉伯数字
+    index = 0
+    start = end = 0
+    while True:
+        char = string[index]
+
+        if char in digits_scales:
+            end += 1
+            index += 1
+        else:
+            if start < end:
+                num = str(chinese_string_to_num(string[start:end]))
+                # 需要加多一个分隔符
+                num_str = str(num) + ' '
+                string = string[:start] + num_str + string[end:]
+                index = start + len(num_str)
+                start = end = index
+            else:
+                index += 1
+                start = end = index
+
+        if index >= len(string):
+            if start < end:
+                num = str(chinese_string_to_num(string[start:end]))
+                num_str = str(num) + ' '
+                string = string[:start] + num_str + string[end:]
+
+            break
+
+    return string
+
+
 def replace_word_tokens(string, language):
     """
     Given a string and an ISO 639-2 language code,
@@ -263,7 +339,10 @@ def parse(string, language=None):
     Return a solution to the equation in the input string.
     """
     if language:
-        string = replace_word_tokens(string, language)
+        if language == 'SIMPLIFIED_CHINESE':
+            string = replace_word_tokens_simplified_chinese(string)
+        else:
+            string = replace_word_tokens(string, language)
 
     tokens = tokenize(string)
     postfix = to_postfix(tokens)
