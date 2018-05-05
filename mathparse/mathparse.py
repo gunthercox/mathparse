@@ -1,3 +1,4 @@
+# -*- coding: UTF-8 -*-
 """
 Methods for evaluating mathematical equations in strings.
 """
