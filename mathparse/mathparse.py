@@ -100,8 +100,13 @@ def replace_word_tokens(string, language):
         operators.update(words['unary_operators'])
 
     # Ensures unicode string processing
-    if not isinstance(string, unicode):
-        string = unicode(string, "utf-8")
+    import sys
+    if sys.version_info.major == 3:
+        if not isinstance(string, str):
+            string.decode("utf-8")
+    else:
+        if not isinstance(string, unicode):
+            string = unicode(string, "utf-8")
 
     for operator in list(operators.keys()):
         if operator in string:
