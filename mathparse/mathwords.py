@@ -407,6 +407,7 @@ def word_groups_for_language(language_code):
 
     return MATH_WORDS[language_code]
 
+
 def words_for_language(language_code):
     """
     Return the math words for a language code.

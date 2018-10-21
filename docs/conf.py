@@ -4,7 +4,7 @@
 # mathparse documentation build configuration file, created by
 # sphinx-quickstart on Tue Aug  8 07:11:36 2017.
 
-import sphinx_rtd_theme
+import sphinx_rtd_theme # NOQA
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
