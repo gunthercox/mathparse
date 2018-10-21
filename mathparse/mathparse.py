@@ -111,12 +111,6 @@ def replace_word_tokens(string, language):
     if 'unary_operators' in words:
         operators.update(words['unary_operators'])
 
-    # Ensures unicode string processing
-    import sys
-    if sys.version_info.major < 3:
-        if not isinstance(string, unicode):
-            string = unicode(string, "utf-8")
-
     for operator in list(operators.keys()):
         if operator in string:
             string = string.replace(operator, operators[operator])
