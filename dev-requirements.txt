@@ -1,7 +1,7 @@
+coveralls
 flake8
-mock
 nose
 pip
 twine
-sphinx>=1.6,<1.7
+sphinx>=1.8,<1.9
 sphinx_rtd_theme

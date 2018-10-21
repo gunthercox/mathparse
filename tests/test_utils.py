@@ -84,6 +84,8 @@ class ExtractExpressionTestCase(TestCase):
         self.assertEqual(result, '3 + 3')
 
     def test_extract_expression_simple_additon_words(self):
-        result = mathparse.extract_expression('What is three plus three?', language='ENG')
+        result = mathparse.extract_expression(
+            'What is three plus three?', language='ENG'
+        )
 
         self.assertEqual(result, 'three plus three')

@@ -1,10 +1,10 @@
 """
 Methods for evaluating mathematical equations in strings.
 """
-from __future__ import division
 from decimal import Decimal
 from . import mathwords
 import re
+
 
 class PostfixTokenEvaluationException(Exception):
     """
@@ -45,7 +45,8 @@ def is_constant(string):
 
 def is_unary(string):
     """
-    Return true if the string is a defined unary mathematical operator function.
+    Return true if the string is a defined unary mathematical
+    operator function.
     """
     return string in mathwords.UNARY_FUNCTIONS
 
@@ -55,6 +56,7 @@ def is_binary(string):
     Return true if the string is a defined binary operator.
     """
     return string in mathwords.BINARY_OPERATORS
+
 
 def is_symbol(string):
     """
@@ -67,6 +69,7 @@ def is_symbol(string):
         (string == '(') or (string == ')')
     )
 
+
 def is_word(word, language):
     """
     Return true if the word is a math word for the specified language.
@@ -75,16 +78,25 @@ def is_word(word, language):
 
     return word in words
 
+
 def find_word_groups(string, words):
     """
     Find matches for words in the format "3 thousand 6 hundred 2".
-    The words parameter should be the list of words to check for such as "hundred".
+    The words parameter should be the list of words to check for
+    such as "hundred".
     """
     scale_pattern = '|'.join(words)
-    # For example: (?:(?:\d+)\s+(?:hundred|thousand|million)*\s*)+(?:\d+|hundred|thousand|million)+
-    regex = re.compile(r'(?:(?:\d+)\s+(?:' + scale_pattern + r')*\s*)+(?:\d+|' + scale_pattern + r')+')
+    # For example:
+    # (?:(?:\d+)\s+(?:hundred|thousand)*\s*)+(?:\d+|hundred|thousand)+
+    regex = re.compile(
+        r'(?:(?:\d+)\s+(?:' +
+        scale_pattern +
+        r')*\s*)+(?:\d+|' +
+        scale_pattern + r')+'
+    )
     result = regex.findall(string)
     return result
+
 
 def replace_word_tokens(string, language):
     """
@@ -98,12 +110,6 @@ def replace_word_tokens(string, language):
     operators = words['binary_operators'].copy()
     if 'unary_operators' in words:
         operators.update(words['unary_operators'])
-
-    # Ensures unicode string processing
-    import sys
-    if sys.version_info.major < 3:
-        if not isinstance(string, unicode):
-            string = unicode(string, "utf-8")
 
     for operator in list(operators.keys()):
         if operator in string:
@@ -141,7 +147,10 @@ def replace_word_tokens(string, language):
                 add = ''
 
             string = string[:start_index] + '(' + string[start_index:]
-            string = string.replace(scale, '* ' + str(scales[scale]) + ')' + add, 1)
+            string = string.replace(
+                scale, '* ' + str(scales[scale]) + ')' + add,
+                1
+            )
 
     string = string.replace(') (', ') + (')
 
@@ -181,7 +190,9 @@ def to_postfix(tokens):
                 postfix.append(top_token)
                 top_token = opstack.pop()
         else:
-            while (opstack != []) and (precedence[opstack[-1]] >= precedence[token]):
+            while (opstack != []) and (
+                precedence[opstack[-1]] >= precedence[token]
+            ):
                 postfix.append(opstack.pop())
             opstack.append(token)
 
@@ -223,14 +234,18 @@ def evaluate_postfix(tokens):
                 else:
                     total = Decimal(str(a)) / Decimal(str(b))
             else:
-                raise PostfixTokenEvaluationException('Unknown token {}'.format(token))
+                raise PostfixTokenEvaluationException(
+                    'Unknown token {}'.format(token)
+                )
 
         if total is not None:
             stack.append(total)
 
     # If the stack is empty the tokens could not be evaluated
     if not stack:
-        raise PostfixTokenEvaluationException('The postfix expression resulted in an empty stack')
+        raise PostfixTokenEvaluationException(
+            'The postfix expression resulted in an empty stack'
+        )
 
     return stack.pop()
 
