@@ -419,6 +419,57 @@ MATH_WORDS = {
             'bilhão': 1000000000,
             'trilhão': 1000000000000
         }
+    },
+'ESP': {
+        'unary_operators': {
+            'cuadrado': '^ 2',
+            'cubo': '^ 3',
+            'raiz cuadrada': 'sqrt'
+        },
+        'binary_operators': {
+            'más': '+',
+            'entre': '/',
+            'menos': '-',
+            'por': '*',
+            'elevado al': '^'
+        },
+        'numbers': {
+            'cero': 0,
+            'uno': 1,
+            'dos': 2,
+            'tres': 3,
+            'cuatro': 4,
+            'cinco': 5,
+            'seis': 6,
+            'siete': 7,
+            'ocho': 8,
+            'nueve': 9,
+            'diez': 10,
+            'once': 11,
+            'doce': 12,
+            'trece': 13,
+            'catorce': 14,
+            'quince': 15,
+            'dieciséis': 16,
+            'diecisiete': 17,
+            'dieciocho': 18,
+            'diecinueve': 19,
+            'veinte': 20,
+            'treinta': 30,
+            'cuarenta': 40,
+            'cincuenta': 50,
+            'sesenta': 60,
+            'setenta': 70,
+            'ochenta': 80,
+            'noventa': 90
+        },
+        'scales': {
+            'cien': 100,
+            'mil': 1000,
+            'millon': 1000000,
+            'billon': 1000000000,
+            'trillon': 1000000000000
+        }
     }
 }
 
