@@ -422,15 +422,16 @@ MATH_WORDS = {
     },
 'ESP': {
         'unary_operators': {
-            'cuadrado': '^ 2',
-            'cubo': '^ 3',
-            'raiz cuadrada': 'sqrt'
+            'al cuadrado': '^ 2',
+            'al cubo': '^ 3',
+            'raiz cuadrada de': 'sqrt'
         },
         'binary_operators': {
             'más': '+',
             'entre': '/',
             'menos': '-',
             'por': '*',
+            'veces':'*',
             'elevado al': '^'
         },
         'numbers': {
