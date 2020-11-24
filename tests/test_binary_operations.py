@@ -80,7 +80,7 @@ class PositiveFloatTestCase(TestCase):
     def test_addition(self):
         result = mathparse.parse('0.6 + 0.5')
 
-        self.assertEqual(result, 1.1)
+        self.assertEqual(float(result), 1.1)
 
     def test_subtraction(self):
         result = mathparse.parse('30.1 - 29.1')
@@ -90,9 +90,9 @@ class PositiveFloatTestCase(TestCase):
     def test_multiplication(self):
         result = mathparse.parse('0.9 * 0.9')
 
-        self.assertEqual(result, 0.81)
+        self.assertEqual(float(result), 0.81)
 
     def test_division(self):
         result = mathparse.parse('0.6 / 0.2')
 
-        self.assertEqual(result, 3)
+        self.assertEqual(float(result), 3)
