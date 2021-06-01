@@ -37,6 +37,3 @@ jobs:
     - name: Test documentation
       run: |
         sphinx-build -nW -b html ./docs/ ./build/
-    - name: Coverage
-      run: |
-        coveralls
