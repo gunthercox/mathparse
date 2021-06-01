@@ -43,7 +43,7 @@ master_doc = 'index'
 
 # General information about the project.
 project = 'mathparse'
-copyright = '2018, Gunther Cox'
+copyright = '2021, Gunther Cox'
 author = 'Gunther Cox'
 
 # The version info for the project you're documenting, acts as replacement for
