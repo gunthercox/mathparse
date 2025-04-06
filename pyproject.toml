@@ -1,0 +1,52 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages=[
+    "mathparse",
+]
+
+[tool.setuptools.dynamic]
+version = {attr = "mathparse.__version__"}
+
+[project]
+name = "mathparse"
+requires-python = ">=3.9,<=3.13"
+urls = { Documentation = "https://docs.chatterbot.us", Repository = "https://github.com/gunthercox/ChatterBot", Changelog = "https://github.com/gunthercox/ChatterBot/releases" }
+authors = [
+  {name = "Gunther Cox"},
+]
+license = "MIT"
+description = "mathparse is a library for solving mathematical equations contained in strings"
+readme = "README.md"
+dynamic = ["version"]
+keywords = [
+    "mathparse",
+    "mathematics",
+    "math",
+    "nlp",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Mathematics",
+    "Topic :: Text Processing :: General",
+    "Topic :: Text Processing :: Linguistic",
+    "Programming Language :: Python",
+]
+dependencies = [
+    "mathparse>=0.1,<0.2",
+    "python-dateutil>=2.9,<2.10",
+    "sqlalchemy>=2.0,<2.1",
+    "spacy>=3.8,<3.9",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+test = [
+    "flake8",
+    "sphinx>=8.2,<9.0"
+]
