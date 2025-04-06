@@ -2,4 +2,4 @@
 mathparse is a library for solving mathematical equations contained in strings
 """
 
-__version__ = '0.1.5'
+__version__ = '0.2.0'
