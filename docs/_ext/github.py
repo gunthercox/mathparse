@@ -15,7 +15,10 @@ def setup_github_func(app, pagename, templatename, context, doctree):
     docs_path = 'docs'
 
     def my_func():
-        return f'https://github.com/{GITHUB_USER}/{GITHUB_REPO}/blob/{github_version}/{docs_path}/{pagename}.rst'
+        return (
+            f'https://github.com/{GITHUB_USER}/{GITHUB_REPO}/blob/'
+            f'{github_version}/{docs_path}/{pagename}.rst'
+        )
 
     # Add it to the page's context
     context['github_page_link'] = my_func

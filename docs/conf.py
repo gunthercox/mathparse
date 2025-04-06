@@ -21,7 +21,7 @@ sys.path.insert(0, parent_directory)
 
 sys.path.append(str(Path('_ext').resolve()))
 
-from mathparse import __version__ as mathparse_version
+from mathparse import __version__ as mathparse_version  # noqa: E402
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom

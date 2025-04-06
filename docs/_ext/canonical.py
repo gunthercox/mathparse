@@ -2,6 +2,7 @@
 Add GitHub repository details to the Sphinx context.
 """
 
+
 def setup_canonical_func(app, pagename, templatename, context, doctree):
     """
     Return the url to the specified page on GitHub.
