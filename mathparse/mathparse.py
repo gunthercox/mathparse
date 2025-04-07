@@ -177,7 +177,7 @@ def to_postfix(tokens):
         if is_int(token):
             postfix.append(int(token))
         elif is_float(token):
-            postfix.append(float(token))
+            postfix.append(Decimal(token))
         elif token in mathwords.CONSTANTS:
             postfix.append(mathwords.CONSTANTS[token])
         elif is_unary(token):
@@ -294,11 +294,29 @@ def parse(string, language=None):
     return evaluate_postfix(postfix)
 
 
+def insert_spaces(statement_text):
+    """
+    4+2 -> 4 + 2
+    23456.01+(2435.2/523454.324)-(52344^3+5435)^2 ->
+    23456.01 + (2435.2 / 523454.324) - (52344 ^ 3 + 5435) ^ 2
+
+    """
+    s = statement_text
+    f = re.search(r"(\S)([\+\-\*\/\^\*])(\S)", s)
+    if f:
+        s = s.replace(
+            "{}{}{}".format(f[1], f[2], f[3]), "{} {} {}".format(f[1], f[2], f[3])
+        )
+        s = insert_spaces(s)
+    return s
+
+
 def extract_expression(dirty_string, language):
     """
     Give a string such as: "What is 4 + 4?"
     Return the string "4 + 4"
     """
+    dirty_string = insert_spaces(dirty_string)
     tokens = tokenize(dirty_string, language)
 
     start_index = 0

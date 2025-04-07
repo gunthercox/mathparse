@@ -89,3 +89,16 @@ class ExtractExpressionTestCase(TestCase):
         )
 
         self.assertEqual(result, 'three plus three')
+
+    def test_complicated_case(self):
+        _expr = mathparse.extract_expression(
+            "23456.01+(2435.2/523454.324)-(52344^3+5435)^2", "ENG"
+        )
+        result = mathparse.parse(_expr)
+
+        self.assertEqual(float(result), 2.491630792289360313884500230e51322)
+
+    def test_less_complicated_case(self):
+        _expr = mathparse.extract_expression("6 + (2 / 4) - (4 + 5) ^ 2", "ENG")
+        result = mathparse.parse(_expr)
+        self.assertEqual(float(result), 6.25)
