@@ -19,6 +19,10 @@ th.head p {
     background-color: #300a24;
 }
 
+.toctree-l1 {
+    padding-bottom: 3px;
+}
+
 div.sphinxsidebar {
     overflow: hidden;
 }
@@ -50,6 +54,7 @@ div.sphinxsidebar input[type="submit"] {
 
 
 .help-footer {
+    margin-top: 15px;
     border-top: 15px #320023 solid;
 }
 
@@ -61,4 +66,21 @@ div.sphinxsidebar input[type="submit"] {
 .help-footer a {
     color: #2980B9;
     text-decoration: none;
+}
+
+
+.bluesky-social-icon {
+    width: 30px;
+    margin-right: 10px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+/* mathparse */
+
+div.sphinxsidebarwrapper, p.logo {
+    padding-top: 0px;
+    margin-top: 0px;
 }

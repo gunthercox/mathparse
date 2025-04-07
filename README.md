@@ -28,6 +28,10 @@ pip install mathparse
 The language parameter must be set in order to evaluate an equation that uses word operators.
 The language code should be a valid [ISO 639-2](https://www.loc.gov/standards/iso639-2/php/code_list.php) language code.
 
-## History
+## Documentation
+
+See the full documentation at https://mathparse.chatterbot.us
+
+## Changelog
 
 See [release notes](https://github.com/gunthercox/ChatterBot/releases) for changes.
