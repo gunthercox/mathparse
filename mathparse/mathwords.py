@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import math
 
 """
@@ -448,7 +446,7 @@ class InvalidLanguageCodeException(Exception):
     pass
 
 
-def word_groups_for_language(language_code):
+def word_groups_for_language(language_code: str) -> dict[str, dict[str, str]]:
     """
     Return the math word groups for a language code.
     The language_code should be an ISO 639-2 language code.
@@ -462,7 +460,7 @@ def word_groups_for_language(language_code):
     return MATH_WORDS[language_code]
 
 
-def words_for_language(language_code):
+def words_for_language(language_code: str) -> list[str]:
     """
     Return the math words for a language code.
     The language_code should be an ISO 639-2 language code.
