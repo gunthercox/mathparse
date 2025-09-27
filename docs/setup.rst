@@ -31,4 +31,21 @@ Usage
     The language code should be a valid `ISO 639-2`_ language code.
 
 
+Development
+===========
+
+To generate the documentation locally, clone the repository and install the development requirements:
+
+.. code-block:: shell
+
+    git clone https://github.com/gunthercox/mathparse.git
+    cd mathparse
+    pip install .[test]
+
+Then, from the root of the repository, run:
+
+.. code-block:: shell
+
+    sphinx-build -nW -b dirhtml docs/ html/
+
 .. _`ISO 639-2`: https://www.loc.gov/standards/iso639-2/php/code_list.php
