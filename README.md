@@ -17,16 +17,20 @@ mathparse.parse('(seven * nine) + 8 - (45 plus two)', language='ENG')
 >>> 24
 ```
 
+## Security
+
+Mathparse does not employ the use of Python's [`eval` function](https://docs.python.org/3/library/functions.html#eval) when evaluating provided mathematical expressions. This is a measure to prevent arbitrary code execution vulnerabilities. See https://mathparse.chatterbot.us/postfix/ for additional details.
+
+## Language Support
+
+The language parameter must be set in order to evaluate an equation that uses word operators.
+The language code should be a valid [ISO 639-2](https://www.loc.gov/standards/iso639-2/php/code_list.php) language code.
+
 ## Installation
 
 ```bash
 pip install mathparse
 ```
-
-## Language support
-
-The language parameter must be set in order to evaluate an equation that uses word operators.
-The language code should be a valid [ISO 639-2](https://www.loc.gov/standards/iso639-2/php/code_list.php) language code.
 
 ## Documentation
 

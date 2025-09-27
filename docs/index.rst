@@ -21,6 +21,7 @@ Mathparse Documentation
    languages
    utils
    advanced
+   postfix
 
 Indices and tables
 ==================
