@@ -2,6 +2,7 @@
 Methods for evaluating mathematical equations in strings.
 """
 from decimal import Decimal
+from typing import Union
 from . import mathwords
 import re
 
@@ -14,7 +15,7 @@ class PostfixTokenEvaluationException(Exception):
     pass
 
 
-def is_int(string):
+def is_int(string: str) -> bool:
     """
     Return true if string is an integer.
     """
@@ -25,7 +26,7 @@ def is_int(string):
         return False
 
 
-def is_float(string):
+def is_float(string: str) -> bool:
     """
     Return true if the string is a float.
     """
@@ -36,14 +37,14 @@ def is_float(string):
         return False
 
 
-def is_constant(string):
+def is_constant(string: str) -> bool:
     """
     Return true if the string is a mathematical constant.
     """
     return mathwords.CONSTANTS.get(string, False)
 
 
-def is_unary(string):
+def is_unary(string : str) -> bool:
     """
     Return true if the string is a defined unary mathematical
     operator function.
@@ -51,14 +52,14 @@ def is_unary(string):
     return string in mathwords.UNARY_FUNCTIONS
 
 
-def is_binary(string):
+def is_binary(string: str) -> bool:
     """
     Return true if the string is a defined binary operator.
     """
     return string in mathwords.BINARY_OPERATORS
 
 
-def is_symbol(string):
+def is_symbol(string: str) -> bool:
     """
     Return true if the string is a mathematical symbol.
     """
@@ -70,7 +71,7 @@ def is_symbol(string):
     )
 
 
-def is_word(word, language):
+def is_word(word: str, language: str) -> bool:
     """
     Return true if the word is a math word for the specified language.
     """
@@ -79,7 +80,7 @@ def is_word(word, language):
     return word in words
 
 
-def find_word_groups(string, words):
+def find_word_groups(string: str, words: list) -> list:
     """
     Find matches for words in the format "3 thousand 6 hundred 2".
     The words parameter should be the list of words to check for
@@ -98,8 +99,10 @@ def find_word_groups(string, words):
     return result
 
 
-def replace_word_tokens(string, language):
+def replace_word_tokens(string: str, language: str) -> str:
     """
+    Replace word-based mathematical terms with their symbolic equivalents.
+
     Given a string and an ISO 639-2 language code,
     return the string with the words replaced with
     an operational equivalent.
@@ -157,7 +160,7 @@ def replace_word_tokens(string, language):
     return string
 
 
-def to_postfix(tokens):
+def to_postfix(tokens: list) -> list:
     """
     Convert a list of evaluatable tokens to postfix format.
     """
@@ -202,7 +205,7 @@ def to_postfix(tokens):
     return postfix
 
 
-def evaluate_postfix(tokens):
+def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
     """
     Given a list of evaluatable tokens in postfix format,
     calculate a solution.
@@ -250,9 +253,23 @@ def evaluate_postfix(tokens):
     return stack.pop()
 
 
-def tokenize(string, language=None, escape='___'):
+def tokenize(string: str, language: str = None, escape: str = '___') -> list:
     """
-    Given a string, return a list of math symbol tokens
+    Convert a string into a list of mathematical tokens for processing.
+
+    Args:
+        string (str): The input string containing a mathematical expression.
+
+        language (str, optional): ISO 639-2 language code for word-based
+            parsing. If None, only numeric expressions
+            are supported.
+
+        escape (str, optional): A string used to temporarily replace spaces
+            in multi-word phrases during tokenization.
+            Default is '___'.
+
+    Returns:
+        list: A list of tokens extracted from the input string.
     """
     # Set all words to lowercase
     string = string.lower()
@@ -281,9 +298,59 @@ def tokenize(string, language=None, escape='___'):
     return tokens
 
 
-def parse(string, language=None):
+def parse(string: str, language: str = None) -> Union[int, float, str, Decimal]:
     """
-    Return a solution to the equation in the input string.
+    Parse and evaluate a mathematical expression from a string.
+
+    This is the main entry point for mathparse. It can handle both numeric
+    expressions (like "2 + 3 * 4") and word-based expressions in various
+    languages (like "five plus three" in English).
+
+    Args:
+        string (str): The mathematical expression to parse and evaluate.
+                     Can contain numbers, operators, parentheses, constants,
+                     and functions. For word-based parsing, must use terms
+                     from the specified language.
+        language (str, optional): ISO 639-2 language code for word-based
+                                parsing. Supported codes: 'ENG', 'FRE', 'GER',
+                                'GRE', 'ITA', 'MAR', 'RUS', 'POR'. If None,
+                                only numeric expressions are supported.
+
+    Returns:
+        int, float, or str: The result of the mathematical expression.
+                           Returns 'undefined' for division by zero.
+                           For division operations, returns a Decimal object
+                           to maintain precision.
+
+    Raises:
+        InvalidLanguageCodeException: If an unsupported language code is provided.
+        PostfixTokenEvaluationException: If the expression cannot be evaluated.
+
+    Examples:
+        >>> parse('2 + 3 * 4')
+        14
+
+        >>> parse('five plus three', language='ENG')
+        8
+
+        >>> parse('(seven * nine) + 8 - (45 plus two)', language='ENG')
+        24
+
+        >>> parse('sqrt 16')
+        4.0
+
+        >>> parse('pi * 2')
+        6.283386
+
+        >>> parse('10 / 0')
+        'undefined'
+
+    Note:
+        - Follows standard order of operations (PEMDAS)
+        - Supports mathematical constants: pi, e
+        - Supports unary functions: sqrt, log
+        - Each expression must use terms from a single language
+        - Division by zero returns 'undefined' instead of raising an exception
     """
     if language:
         string = replace_word_tokens(string, language)
@@ -294,10 +361,37 @@ def parse(string, language=None):
     return evaluate_postfix(postfix)
 
 
-def extract_expression(dirty_string, language):
+def extract_expression(dirty_string: str, language: str) -> str:
     """
-    Give a string such as: "What is 4 + 4?"
-    Return the string "4 + 4"
+    Extract a mathematical expression from a sentence containing extra text.
+
+    This function identifies and extracts the mathematical portion from
+    natural language sentences like "What is 4 + 4?" or "Calculate five plus three".
+    It works by finding the longest sequence of mathematical symbols and words.
+
+    Args:
+        dirty_string (str): A sentence or phrase containing a mathematical
+                          expression mixed with other text.
+        language (str): ISO 639-2 language code to identify mathematical
+                       words in the target language.
+
+    Returns:
+        str: The extracted mathematical expression as a string.
+
+    Examples:
+        >>> extract_expression("What is 5 plus 3?", language='ENG')
+        '5 plus 3'
+
+        >>> extract_expression("Please calculate two times seven", language='ENG')
+        'two times seven'
+
+        >>> extract_expression("The result of 10 / 2 should be 5", language=None)
+        '10 / 2'
+
+    Note:
+        - The function looks for continuous sequences of mathematical terms
+        - Non-mathematical words at the beginning and end are stripped
+        - The language parameter is required to identify word-based math terms
     """
     tokens = tokenize(dirty_string, language)
 

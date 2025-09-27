@@ -17,7 +17,10 @@ Mathparse Documentation
    :maxdepth: 1
 
    setup
+   examples
+   languages
    utils
+   advanced
 
 Indices and tables
 ==================
@@ -28,6 +31,6 @@ Indices and tables
 
 ----
 
-A special thanks to `Griffin Cox`_ for the original design of the Mathparse logo.
+A special thanks to `Griffin Cox`_ for the original design of the mathparse logo.
 
 .. _`Griffin Cox`: https://github.com/griffincx
