@@ -44,7 +44,7 @@ def is_constant(string: str) -> bool:
     return mathwords.CONSTANTS.get(string, False)
 
 
-def is_unary(string : str) -> bool:
+def is_unary(string: str) -> bool:
     """
     Return true if the string is a defined unary mathematical
     operator function.
@@ -298,7 +298,9 @@ def tokenize(string: str, language: str = None, escape: str = '___') -> list:
     return tokens
 
 
-def parse(string: str, language: str = None) -> Union[int, float, str, Decimal]:
+def parse(
+    string: str, language: str = None
+) -> Union[int, float, str, Decimal]:
     """
     Parse and evaluate a mathematical expression from a string.
 
@@ -323,8 +325,10 @@ def parse(string: str, language: str = None) -> Union[int, float, str, Decimal]:
                            to maintain precision.
 
     Raises:
-        InvalidLanguageCodeException: If an unsupported language code is provided.
-        PostfixTokenEvaluationException: If the expression cannot be evaluated.
+        InvalidLanguageCodeException:
+            An unsupported language code was provided.
+        PostfixTokenEvaluationException:
+            The expression cannot be evaluated.
 
     Examples:
         >>> parse('2 + 3 * 4')
@@ -366,7 +370,8 @@ def extract_expression(dirty_string: str, language: str) -> str:
     Extract a mathematical expression from a sentence containing extra text.
 
     This function identifies and extracts the mathematical portion from
-    natural language sentences like "What is 4 + 4?" or "Calculate five plus three".
+    natural language sentences like:
+    "What is 4 + 4?" or "Calculate five plus three".
     It works by finding the longest sequence of mathematical symbols and words.
 
     Args:
@@ -382,10 +387,14 @@ def extract_expression(dirty_string: str, language: str) -> str:
         >>> extract_expression("What is 5 plus 3?", language='ENG')
         '5 plus 3'
 
-        >>> extract_expression("Please calculate two times seven", language='ENG')
+        >>> extract_expression(
+                "Please calculate two times seven", language='ENG'
+            )
         'two times seven'
 
-        >>> extract_expression("The result of 10 / 2 should be 5", language=None)
+        >>> extract_expression(
+                "The result of 10 / 2 should be 5", language=None
+            )
         '10 / 2'
 
     Note:
