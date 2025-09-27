@@ -21,6 +21,8 @@ mathparse.parse('(seven * nine) + 8 - (45 plus two)', language='ENG')
 
 Mathparse does not employ the use of Python's [`eval` function](https://docs.python.org/3/library/functions.html#eval) when evaluating provided mathematical expressions. This is a measure to prevent arbitrary code execution vulnerabilities. See https://mathparse.chatterbot.us/postfix/ for additional details.
 
+Mathparse is a standalone Python package and requires zero dependencies to function.
+
 ## Language Support
 
 The language parameter must be set in order to evaluate an equation that uses word operators.
