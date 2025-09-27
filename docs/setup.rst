@@ -48,4 +48,10 @@ Then, from the root of the repository, run:
 
     sphinx-build -nW -b dirhtml docs/ html/
 
+You can then open the generated HTML files in the `html/` directory, or serve them using a command such as:
+
+.. code-block:: shell
+
+    python -m http.server --directory html 8000
+
 .. _`ISO 639-2`: https://www.loc.gov/standards/iso639-2/php/code_list.php
