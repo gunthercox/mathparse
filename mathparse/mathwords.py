@@ -425,17 +425,19 @@ MATH_WORDS = {
         }
     },
     'ESP': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'raiz cuadrada de': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'al cuadrado': '^ 2',
             'al cubo': '^ 3',
-            'raiz cuadrada de': 'sqrt'
         },
         'binary_operators': {
             'más': '+',
             'entre': '/',
             'menos': '-',
             'por': '*',
-            'veces':'*',
+            'veces': '*',
             'elevado al': '^'
         },
         'numbers': {
@@ -474,12 +476,15 @@ MATH_WORDS = {
             'millon': 1000000,
             'billon': 1000000000,
             'trillon': 1000000000000
+        }
     },
     'THA': {
-        'unary_operators': {
-            'ยกกำลังสอง': '^ 2',
-            'ยกกำลังสาม': '^ 3',
+        'prefix_unary_operators': {
             'สแควรูท': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'ยกกำลังสอง': '^ 2',
+            'ยกกำลังสาม': '^ 3'
         },
         'binary_operators': {
             'บวก': '+',
