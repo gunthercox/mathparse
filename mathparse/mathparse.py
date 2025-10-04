@@ -98,7 +98,9 @@ def find_word_groups(string: str, words: list) -> list:
     return result
 
 
-def replace_word_tokens(string: str, language: str, stopwords: set[str] = None) -> str:
+def replace_word_tokens(
+    string: str, language: str, stopwords: set[str] = None
+) -> str:
     """
     Replace word-based mathematical terms with their symbolic equivalents.
 
