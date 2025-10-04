@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import math
 
 """
@@ -12,10 +10,12 @@ BINARY_OPERATORS = {
 
 MATH_WORDS = {
     'ENG': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'square root of': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'squared': '^ 2',
             'cubed': '^ 3',
-            'square root of': 'sqrt'
         },
         'binary_operators': {
             'plus': '+',
@@ -165,10 +165,12 @@ MATH_WORDS = {
         }
     },
     'GRE': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'τετραγωνική ρίζα του': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'στο τετράγωνο': '^ 2',
             'στον κύβο': '^ 3',
-            'τετραγωνική ρίζα του': 'sqrt'
         },
         'binary_operators': {
             'συν': '+', 'και': '+',
@@ -369,10 +371,12 @@ MATH_WORDS = {
         }
     },
     'POR': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'raiz quadrada de': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'ao quadrado': '^ 2',
             'ao cubo': '^ 3',
-            'raiz quadrada de': 'sqrt'
         },
         'binary_operators': {
             'mais': '+',
@@ -420,7 +424,7 @@ MATH_WORDS = {
             'trilhão': 1000000000000
         }
     },
-'ESP': {
+    'ESP': {
         'unary_operators': {
             'al cuadrado': '^ 2',
             'al cubo': '^ 3',
@@ -470,6 +474,58 @@ MATH_WORDS = {
             'millon': 1000000,
             'billon': 1000000000,
             'trillon': 1000000000000
+    },
+    'THA': {
+        'unary_operators': {
+            'ยกกำลังสอง': '^ 2',
+            'ยกกำลังสาม': '^ 3',
+            'สแควรูท': 'sqrt'
+        },
+        'binary_operators': {
+            'บวก': '+',
+            'หาร': '/',
+            'ลบ': '-',
+            'คูณ': '*',
+            'ยกกำลัง': '^'
+        },
+        'numbers': {
+            'ศูนย์': 0,
+            'หนึ่ง': 1,
+            'สอง': 2,
+            'สาม': 3,
+            'สี่': 4,
+            'ห้า': 5,
+            'หก': 6,
+            'เจ็ด': 7,
+            'แปด': 8,
+            'เก้า': 9,
+            'สิบ': 10,
+            'สิบเอ็ด': 11,
+            'สิบสอง': 12,
+            'สิบสาม': 13,
+            'สิบสี่': 14,
+            'สิบห้า': 15,
+            'สิบหก': 16,
+            'สิบเจ็ด': 17,
+            'สิบแปด': 18,
+            'สิบเก้า': 19,
+            'ยี่สิบ': 20,
+            'สามสิบ': 30,
+            'สี่สิบ': 40,
+            'ห้าสิบ': 50,
+            'หกสิบ': 60,
+            'เจ็ดสิบ': 70,
+            'แปดสิบ': 80,
+            'เก้าสิบ': 90
+        },
+        'scales': {
+            'ร้อย': 100,
+            'พัน': 1000,
+            'หมื่น': 10000,
+            'แสน': 100000,
+            'ล้าน': 1000000,
+            'พันล้าน': 1000000000,
+            'ล้านล้าน': 1000000000000
         }
     }
 }
@@ -494,13 +550,14 @@ UNARY_FUNCTIONS = {
 
 class InvalidLanguageCodeException(Exception):
     """
-    Exception to be raised when a language code is given that
-    is not a part of the ISO 639-2 standard.
+    Exception to be raised when a language code is specified that is not a part
+    of the ISO 639-2 standard, or if the specified language is not yet
+    supported by mathparse.
     """
     pass
 
 
-def word_groups_for_language(language_code):
+def word_groups_for_language(language_code: str) -> dict[str, dict[str, str]]:
     """
     Return the math word groups for a language code.
     The language_code should be an ISO 639-2 language code.
@@ -514,16 +571,16 @@ def word_groups_for_language(language_code):
     return MATH_WORDS[language_code]
 
 
-def words_for_language(language_code):
+def words_for_language(language_code: str) -> set[str]:
     """
     Return the math words for a language code.
     The language_code should be an ISO 639-2 language code.
     https://www.loc.gov/standards/iso639-2/php/code_list.php
     """
     word_groups = word_groups_for_language(language_code)
-    words = []
+    words = set()
 
     for group in word_groups:
-        words.extend(word_groups[group].keys())
+        words.update(word_groups[group].keys())
 
     return words
