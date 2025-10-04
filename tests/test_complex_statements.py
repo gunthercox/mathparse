@@ -15,6 +15,6 @@ class ComplexStatementsTestCase(TestCase):
 
     def test_numeric_values_with_square_root_operator(self):
         result = mathparse.parse(
-            '10 plus square root of 4 times 3', language='ENG'
+            '10 plus the square root of 4 times 3', language='ENG'
         )
         self.assertEqual(result, 10 + 2 * 3)

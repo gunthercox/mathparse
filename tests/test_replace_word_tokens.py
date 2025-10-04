@@ -40,6 +40,6 @@ class EnglishWordTokenTestCase(TestCase):
 
     def test_numeric_values_with_squared_unary_operator(self):
         result = mathparse.replace_word_tokens(
-            '10 plus square root of 2 times 3', language='ENG'
+            '10 plus the square root of 2 times 3', language='ENG'
         )
         self.assertEqual(result, '10 + sqrt 2 * 3')
