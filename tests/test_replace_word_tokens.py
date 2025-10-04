@@ -43,3 +43,9 @@ class EnglishWordTokenTestCase(TestCase):
             '10 plus the square root of 2 times 3', language='ENG'
         )
         self.assertEqual(result, '10 + sqrt 2 * 3')
+
+    def test_tens_and_hundreds_with_spaces(self):
+        result = mathparse.replace_word_tokens(
+            'one hundred times fifty four', language='ENG'
+        )
+        self.assertEqual(result, '((1 * 100)) * (50 + 4)')

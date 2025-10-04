@@ -134,8 +134,23 @@ def replace_word_tokens(string: str, language: str) -> str:
                 replacement = r'(\1 ' + postfix_unary_operators[operator] + ')'
                 string = re.sub(pattern, replacement, string)
 
-    # Replace number words with numeric values
+    # Handle compound numbers (e.g., "twenty one" -> "(20 + 1)", "fifty four" -> "(50 + 4)")
     numbers = words['numbers']
+
+    # Create regex patterns for compound numbers
+    # Pattern matches: (tens_word) (units_word) where tens_word is 20,30,40,...,90 and units_word is 1-9
+    tens_words = {word: value for word, value in numbers.items() if value in [20, 30, 40, 50, 60, 70, 80, 90]}
+    units_words = {word: value for word, value in numbers.items() if value in [1, 2, 3, 4, 5, 6, 7, 8, 9]}
+
+    # Replace compound numbers first (before individual number replacement)
+    for tens_word, tens_value in tens_words.items():
+        for units_word, units_value in units_words.items():
+            compound_pattern = tens_word + r'\s+' + units_word
+            compound_replacement = f'({tens_value} + {units_value})'
+            if re.search(compound_pattern, string):
+                string = re.sub(compound_pattern, compound_replacement, string)
+
+    # Replace number words with numeric values
     for number in frozenset(numbers.keys()):
         if number in string:
             string = string.replace(number, str(numbers[number]))
