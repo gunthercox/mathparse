@@ -24,3 +24,9 @@ class ComplexStatementsTestCase(TestCase):
             '10 plus the square root of 4 times 3', language='ENG'
         )
         self.assertEqual(result, 10 + 2 * 3)
+
+    def test_long_worded_number(self):
+        result = mathparse.parse(
+            'one thousand two hundred thirty four plus five thousand six hundred seventy eight', language='ENG'
+        )
+        self.assertEqual(result, 1234 + 5678)
