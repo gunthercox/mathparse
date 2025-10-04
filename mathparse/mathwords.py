@@ -10,10 +10,12 @@ BINARY_OPERATORS = {
 
 MATH_WORDS = {
     'ENG': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'square root of': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'squared': '^ 2',
             'cubed': '^ 3',
-            'square root of': 'sqrt'
         },
         'binary_operators': {
             'plus': '+',
@@ -163,10 +165,12 @@ MATH_WORDS = {
         }
     },
     'GRE': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'τετραγωνική ρίζα του': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'στο τετράγωνο': '^ 2',
             'στον κύβο': '^ 3',
-            'τετραγωνική ρίζα του': 'sqrt'
         },
         'binary_operators': {
             'συν': '+', 'και': '+',
@@ -367,10 +371,12 @@ MATH_WORDS = {
         }
     },
     'POR': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'raiz quadrada de': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'ao quadrado': '^ 2',
             'ao cubo': '^ 3',
-            'raiz quadrada de': 'sqrt'
         },
         'binary_operators': {
             'mais': '+',
