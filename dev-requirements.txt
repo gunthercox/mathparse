@@ -1,6 +1,0 @@
-flake8
-nose
-pip
-twine
-sphinx>=1.8,<1.9
-sphinx_rtd_theme

@@ -1,16 +1,25 @@
 {% extends '!layout.html' %}
+{# https://github.com/sphinx-doc/sphinx/blob/master/sphinx/themes/basic/layout.html #}
+
+{% set pageurl = canonical_url() %}
+
+{%- block htmltitle %}
+    <meta name="google-adsense-account" content="ca-pub-3019790405701706">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3019790405701706"
+    crossorigin="anonymous"></script>
+
+{{ super() }}
+{%- endblock %}
+
+{%- block relbaritems %}
+    <li class="right"><a href="{{github_page_link()}}">Edit on GitHub</a> |</li>
+{% endblock %}
 
 {% block menu %}
     {{ super() }}
+{% endblock %}
 
-    <script async src="//pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
-    <ins class="adsbygoogle"
-         style="display:block"
-         data-ad-client="ca-pub-3019790405701706"
-         data-ad-slot="5047436804"
-         data-ad-format="auto"></ins>
-    <script>
-    (adsbygoogle = window.adsbygoogle || []).push({});
-    </script>
-
+{%- block footer %}
+    {{ super() }}
+    <!-- Extra JS -->
 {% endblock %}

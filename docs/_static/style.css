@@ -1,3 +1,86 @@
+table {
+    width: 100%;
+}
+
+th.head p {
+    text-align: center;
+}
+
+.table-justified td {
+    width: 50%;
+}
+
+.caption-text {
+    padding-top: 3px;
+    padding-bottom: 3px;
+}
+
 .wy-side-nav-search {
-    background-color: #0A0E30;
+    background-color: #300a24;
+}
+
+.toctree-l1 {
+    padding-bottom: 3px;
+}
+
+div.sphinxsidebar {
+    overflow: hidden;
+}
+
+table caption span.caption-text {
+    color: #efefef;
+    background-color: #1c4e63;
+    width: 100%;
+    display: block;
+}
+
+.banner {
+    margin: 0px -20px;
+}
+
+#searchbox {
+    margin-bottom: 15px;
+}
+
+div.sphinxsidebar input[name="q"] {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+div.sphinxsidebar input[type="submit"] {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+.help-footer {
+    margin-top: 15px;
+    border-top: 15px #320023 solid;
+}
+
+.help-footer h1, .help-footer h2 {
+    color: gray!important;
+    background-color: transparent!important;
+}
+
+.help-footer a {
+    color: #2980B9;
+    text-decoration: none;
+}
+
+
+.bluesky-social-icon {
+    width: 30px;
+    margin-right: 10px;
+}
+
+.inline-block {
+    display: inline-block;
+}
+
+/* mathparse */
+
+div.sphinxsidebarwrapper, p.logo {
+    padding-top: 0px;
+    margin-top: 0px;
 }

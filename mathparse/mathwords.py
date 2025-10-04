@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 import math
 
 """
@@ -11,11 +9,66 @@ BINARY_OPERATORS = {
 }
 
 MATH_WORDS = {
-    'ENG': {
+        'DUT': {
         'unary_operators': {
+            'kwadraat': '^ 2',
+            'vierkantswortel van': 'sqrt',
+            'wortel van': 'sqrt'
+        },
+        'binary_operators': {
+            'plus': '+',
+            'gedeeld door': '/',
+            'min': '-',
+            'maal': '*',
+            'tot de macht': '^',
+            'tot de': '^'
+        },
+        'numbers': {
+            'nul': 0,
+            'een': 1,
+            'één': 1,
+            'twee': 2,
+            'drie': 3,
+            'vier': 4,
+            'vijf': 5,
+            'zes': 6,
+            'zeven': 7,
+            'acht': 8,
+            'negen': 9,
+            'tien': 10,
+            'elf': 11,
+            'twaalf': 12,
+            'dertien': 13,
+            'veertien': 14,
+            'vijftien': 15,
+            'zestien': 16,
+            'zeventien': 17,
+            'achttien': 18,
+            'negentien': 19,
+            'twintig': 20,
+            'dertig': 30,
+            'veertig': 40,
+            'vijftig': 50,
+            'zestig': 60,
+            'zeventig': 70,
+            'tachtig': 80,
+            'negentig': 90
+        },
+        'scales': {
+            'honderd': 100,
+            'duizend': 1000,
+            'miljoen': 1000000,
+            'miljard': 1000000000,
+            'biljard': 1000000000000
+        }
+    },
+    'ENG': {
+        'prefix_unary_operators': {
+            'square root of': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'squared': '^ 2',
             'cubed': '^ 3',
-            'square root of': 'sqrt'
         },
         'binary_operators': {
             'plus': '+',
@@ -165,10 +218,12 @@ MATH_WORDS = {
         }
     },
     'GRE': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'τετραγωνική ρίζα του': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'στο τετράγωνο': '^ 2',
             'στον κύβο': '^ 3',
-            'τετραγωνική ρίζα του': 'sqrt'
         },
         'binary_operators': {
             'συν': '+', 'και': '+',
@@ -369,10 +424,12 @@ MATH_WORDS = {
         }
     },
     'POR': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'raiz quadrada de': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'ao quadrado': '^ 2',
             'ao cubo': '^ 3',
-            'raiz quadrada de': 'sqrt'
         },
         'binary_operators': {
             'mais': '+',
@@ -473,6 +530,115 @@ MATH_WORDS = {
             'мільярд': 1000000000,
             'трильйон': 1000000000000
         }
+    },
+    'ESP': {
+        'prefix_unary_operators': {
+            'raiz cuadrada de': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'al cuadrado': '^ 2',
+            'al cubo': '^ 3',
+        },
+        'binary_operators': {
+            'más': '+',
+            'entre': '/',
+            'menos': '-',
+            'por': '*',
+            'veces': '*',
+            'elevado al': '^'
+        },
+        'numbers': {
+            'cero': 0,
+            'uno': 1,
+            'dos': 2,
+            'tres': 3,
+            'cuatro': 4,
+            'cinco': 5,
+            'seis': 6,
+            'siete': 7,
+            'ocho': 8,
+            'nueve': 9,
+            'diez': 10,
+            'once': 11,
+            'doce': 12,
+            'trece': 13,
+            'catorce': 14,
+            'quince': 15,
+            'dieciséis': 16,
+            'diecisiete': 17,
+            'dieciocho': 18,
+            'diecinueve': 19,
+            'veinte': 20,
+            'treinta': 30,
+            'cuarenta': 40,
+            'cincuenta': 50,
+            'sesenta': 60,
+            'setenta': 70,
+            'ochenta': 80,
+            'noventa': 90
+        },
+        'scales': {
+            'cien': 100,
+            'mil': 1000,
+            'millon': 1000000,
+            'billon': 1000000000,
+            'trillon': 1000000000000
+        }
+    },
+    'THA': {
+        'prefix_unary_operators': {
+            'สแควรูท': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'ยกกำลังสอง': '^ 2',
+            'ยกกำลังสาม': '^ 3'
+        },
+        'binary_operators': {
+            'บวก': '+',
+            'หาร': '/',
+            'ลบ': '-',
+            'คูณ': '*',
+            'ยกกำลัง': '^'
+        },
+        'numbers': {
+            'ศูนย์': 0,
+            'หนึ่ง': 1,
+            'สอง': 2,
+            'สาม': 3,
+            'สี่': 4,
+            'ห้า': 5,
+            'หก': 6,
+            'เจ็ด': 7,
+            'แปด': 8,
+            'เก้า': 9,
+            'สิบ': 10,
+            'สิบเอ็ด': 11,
+            'สิบสอง': 12,
+            'สิบสาม': 13,
+            'สิบสี่': 14,
+            'สิบห้า': 15,
+            'สิบหก': 16,
+            'สิบเจ็ด': 17,
+            'สิบแปด': 18,
+            'สิบเก้า': 19,
+            'ยี่สิบ': 20,
+            'สามสิบ': 30,
+            'สี่สิบ': 40,
+            'ห้าสิบ': 50,
+            'หกสิบ': 60,
+            'เจ็ดสิบ': 70,
+            'แปดสิบ': 80,
+            'เก้าสิบ': 90
+        },
+        'scales': {
+            'ร้อย': 100,
+            'พัน': 1000,
+            'หมื่น': 10000,
+            'แสน': 100000,
+            'ล้าน': 1000000,
+            'พันล้าน': 1000000000,
+            'ล้านล้าน': 1000000000000
+        }
     }
 }
 
@@ -496,13 +662,14 @@ UNARY_FUNCTIONS = {
 
 class InvalidLanguageCodeException(Exception):
     """
-    Exception to be raised when a language code is given that
-    is not a part of the ISO 639-2 standard.
+    Exception to be raised when a language code is specified that is not a part
+    of the ISO 639-2 standard, or if the specified language is not yet
+    supported by mathparse.
     """
     pass
 
 
-def word_groups_for_language(language_code):
+def word_groups_for_language(language_code: str) -> dict[str, dict[str, str]]:
     """
     Return the math word groups for a language code.
     The language_code should be an ISO 639-2 language code.
@@ -516,16 +683,16 @@ def word_groups_for_language(language_code):
     return MATH_WORDS[language_code]
 
 
-def words_for_language(language_code):
+def words_for_language(language_code: str) -> set[str]:
     """
     Return the math words for a language code.
     The language_code should be an ISO 639-2 language code.
     https://www.loc.gov/standards/iso639-2/php/code_list.php
     """
     word_groups = word_groups_for_language(language_code)
-    words = []
+    words = set()
 
     for group in word_groups:
-        words.extend(word_groups[group].keys())
+        words.update(word_groups[group].keys())
 
     return words
