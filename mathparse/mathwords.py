@@ -446,8 +446,9 @@ UNARY_FUNCTIONS = {
 
 class InvalidLanguageCodeException(Exception):
     """
-    Exception to be raised when a language code is given that
-    is not a part of the ISO 639-2 standard.
+    Exception to be raised when a language code is specified that is not a part
+    of the ISO 639-2 standard, or if the specified language is not yet
+    supported by mathparse.
     """
     pass
 

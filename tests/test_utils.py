@@ -1,5 +1,6 @@
 from unittest import TestCase
 from mathparse import mathparse
+from mathparse.mathwords import InvalidLanguageCodeException
 
 
 class BooleanChecksTestCase(TestCase):
@@ -47,6 +48,10 @@ class TokenizationTestCase(TestCase):
         result = mathparse.tokenize('Three PLUS five', language='ENG')
 
         self.assertEqual(result, ['three', 'plus', 'five'])
+
+    def test_tokenize_invalid_language(self):
+        with self.assertRaises(InvalidLanguageCodeException):
+            mathparse.tokenize('Three PLUS five', language='123')
 
     def test_load_english_words(self):
         from mathparse import mathwords

@@ -9,8 +9,7 @@ import re
 
 class PostfixTokenEvaluationException(Exception):
     """
-    Exception to be raised when a language code is given that
-    is not a part of the ISO 639-2 standard.
+    Exception to be raised when an expression cannot be evaluated.
     """
     pass
 
@@ -99,7 +98,7 @@ def find_word_groups(string: str, words: list) -> list:
     return result
 
 
-def replace_word_tokens(string: str, language: str) -> str:
+def replace_word_tokens(string: str, language: str, stopwords: set[str] = None) -> str:
     """
     Replace word-based mathematical terms with their symbolic equivalents.
 
@@ -165,8 +164,7 @@ def replace_word_tokens(string: str, language: str) -> str:
             if re.search(compound_pattern, string):
                 string = re.sub(compound_pattern, compound_replacement, string)
 
-    # Replace number words with numeric values (using word boundaries to avoid
-    # partial matches)
+    # Replace number words with numeric values
     for number in frozenset(numbers.keys()):
         # Use word boundaries to prevent partial matches
         # (e.g., "nine" in "nineteen")
@@ -174,22 +172,16 @@ def replace_word_tokens(string: str, language: str) -> str:
         if re.search(pattern, string):
             string = re.sub(pattern, str(numbers[number]), string)
 
-    # Remove words that are not registered mathematical terms
-    # (typically stopwords)
-    all_math_words = mathwords.words_for_language(language)
-    word_list = string.split()
-    symbol_characters = frozenset('0123456789+-*/^().')
-    filtered_words = []
-    for word in word_list:
-        # Keep the word if it is a mathematical symbol, a registered math word.
-        # A word is considered a mathematical symbol if it contains digits,
-        # operators, or parentheses.
-        contains_math_chars = any(c in word for c in symbol_characters)
-        if (is_symbol(word) or contains_math_chars or word in all_math_words):
-            filtered_words.append(word)
+    # Remove words specified to be ignored
+    if stopwords:
+        filtered_words = []
+
+        for word in string.split():
+            if word not in stopwords:
+                filtered_words.append(word)
+        string = ' '.join(filtered_words)
 
     # Replace scaling multipliers with numeric values
-    string = ' '.join(filtered_words)
     scales = words['scales']
     end_index_characters = mathwords.BINARY_OPERATORS
     end_index_characters.add('(')
@@ -282,8 +274,10 @@ def to_postfix(tokens: list) -> list:
                 postfix.append(opstack.pop())
             opstack.append(token)
         else:
-            # Skip tokens that are not mathematical symbols (stopwords, etc.)
-            continue
+            # Raise exception for unsupported mathematical terms
+            raise PostfixTokenEvaluationException(
+                'Unsupported mathematical term: "{}"'.format(token)
+            )
 
     while opstack != []:
         postfix.append(opstack.pop())
@@ -306,7 +300,13 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
         elif is_unary(token):
             a = stack.pop()
             total = mathwords.UNARY_FUNCTIONS[token](a)
-        elif len(stack):
+        elif len(stack) == 1:
+            raise PostfixTokenEvaluationException(
+                'Insufficient values in expression for operator "{}"'.format(
+                    token
+                )
+            )
+        elif len(stack) > 1:
             b = stack.pop()
             a = stack.pop()
             if token == '+':
@@ -385,7 +385,7 @@ def tokenize(string: str, language: str = None, escape: str = '___') -> list:
 
 
 def parse(
-    string: str, language: str = None
+    string: str, language: str = None, stopwords: set[str] = None
 ) -> Union[int, float, str, Decimal]:
     """
     Parse and evaluate a mathematical expression from a string.
@@ -403,6 +403,9 @@ def parse(
                                 parsing. Supported codes: 'ENG', 'FRE', 'GER',
                                 'GRE', 'ITA', 'MAR', 'RUS', 'POR'. If None,
                                 only numeric expressions are supported.
+        stopwords (set[str], optional): A set of words to ignore during
+                                       parsing. This can be used to filter out
+                                       non-mathematical words in expressions.
 
     Returns:
         int, float, or str: The result of the mathematical expression.
@@ -443,7 +446,7 @@ def parse(
         - Division by zero returns 'undefined' instead of raising an exception
     """
     if language:
-        string = replace_word_tokens(string, language)
+        string = replace_word_tokens(string, language, stopwords)
 
     tokens = tokenize(string)
     postfix = to_postfix(tokens)
