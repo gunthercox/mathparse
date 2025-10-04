@@ -40,4 +40,4 @@ See the full documentation at https://mathparse.chatterbot.us
 
 ## Changelog
 
-See [release notes](https://github.com/gunthercox/ChatterBot/releases) for changes.
+See [release notes](https://github.com/gunthercox/mathparse/releases) for changes.

@@ -10,10 +10,12 @@ BINARY_OPERATORS = {
 
 MATH_WORDS = {
     'ENG': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'square root of': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'squared': '^ 2',
             'cubed': '^ 3',
-            'square root of': 'sqrt'
         },
         'binary_operators': {
             'plus': '+',
@@ -163,10 +165,12 @@ MATH_WORDS = {
         }
     },
     'GRE': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'τετραγωνική ρίζα του': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'στο τετράγωνο': '^ 2',
             'στον κύβο': '^ 3',
-            'τετραγωνική ρίζα του': 'sqrt'
         },
         'binary_operators': {
             'συν': '+', 'και': '+',
@@ -367,10 +371,12 @@ MATH_WORDS = {
         }
     },
     'POR': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            'raiz quadrada de': 'sqrt'
+        },
+        'postfix_unary_operators': {
             'ao quadrado': '^ 2',
             'ao cubo': '^ 3',
-            'raiz quadrada de': 'sqrt'
         },
         'binary_operators': {
             'mais': '+',
@@ -460,16 +466,16 @@ def word_groups_for_language(language_code: str) -> dict[str, dict[str, str]]:
     return MATH_WORDS[language_code]
 
 
-def words_for_language(language_code: str) -> list[str]:
+def words_for_language(language_code: str) -> set[str]:
     """
     Return the math words for a language code.
     The language_code should be an ISO 639-2 language code.
     https://www.loc.gov/standards/iso639-2/php/code_list.php
     """
     word_groups = word_groups_for_language(language_code)
-    words = []
+    words = set()
 
     for group in word_groups:
-        words.extend(word_groups[group].keys())
+        words.update(word_groups[group].keys())
 
     return words

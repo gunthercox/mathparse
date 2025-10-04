@@ -109,32 +109,63 @@ def replace_word_tokens(string: str, language: str) -> str:
     """
     words = mathwords.word_groups_for_language(language)
 
-    # Replace operator words with numeric operators
-    operators = words['binary_operators'].copy()
-    if 'unary_operators' in words:
-        operators.update(words['unary_operators'])
-
-    for operator in list(operators.keys()):
+    # Replace binary operator words with numeric operators
+    binary_operators = words['binary_operators']
+    for operator in frozenset(binary_operators.keys()):
         if operator in string:
-            string = string.replace(operator, operators[operator])
+            string = string.replace(operator, binary_operators[operator])
+
+    # Handle prefix unary operators (like "square root of")
+    if 'prefix_unary_operators' in words:
+        prefix_unary_operators = words['prefix_unary_operators']
+        for operator in frozenset(prefix_unary_operators.keys()):
+            if operator in string:
+                string = string.replace(
+                    operator, prefix_unary_operators[operator]
+                )
+
+    # Handle postfix unary operators (like "squared", "cubed")
+    if 'postfix_unary_operators' in words:
+        postfix_unary_operators = words['postfix_unary_operators']
+        for operator in frozenset(postfix_unary_operators.keys()):
+            if operator in string:
+                # Captures the number/operand before the unary operator
+                pattern = r'(\w+)\s+' + re.escape(operator)
+                replacement = r'(\1 ' + postfix_unary_operators[operator] + ')'
+                string = re.sub(pattern, replacement, string)
 
     # Replace number words with numeric values
     numbers = words['numbers']
-    for number in list(numbers.keys()):
+    for number in frozenset(numbers.keys()):
         if number in string:
             string = string.replace(number, str(numbers[number]))
 
+    # Remove words that are not registered mathematical terms
+    # (typically stopwords)
+    all_math_words = mathwords.words_for_language(language)
+    word_list = string.split()
+    symbol_characters = frozenset('0123456789+-*/^().')
+    filtered_words = []
+    for word in word_list:
+        # Keep the word if it is a mathematical symbol, a registered math word.
+        # A word is considered a mathematical symbol if it contains digits,
+        # operators, or parentheses.
+        contains_math_chars = any(c in word for c in symbol_characters)
+        if (is_symbol(word) or contains_math_chars or word in all_math_words):
+            filtered_words.append(word)
+
     # Replace scaling multipliers with numeric values
+    string = ' '.join(filtered_words)
     scales = words['scales']
     end_index_characters = mathwords.BINARY_OPERATORS
     end_index_characters.add('(')
 
-    word_matches = find_word_groups(string, list(scales.keys()))
+    word_matches = find_word_groups(string, frozenset(scales.keys()))
 
     for match in word_matches:
         string = string.replace(match, '(' + match + ')')
 
-    for scale in list(scales.keys()):
+    for scale in frozenset(scales.keys()):
         for _ in range(0, string.count(scale)):
             start_index = string.find(scale) - 1
             end_index = len(string)
@@ -173,6 +204,9 @@ def to_postfix(tokens: list) -> list:
         '(': 1
     }
 
+    # Unary functions have a higher precedence than binary operators
+    unary_precedence = max(precedence.values()) + 1
+
     postfix = []
     opstack = []
 
@@ -192,12 +226,26 @@ def to_postfix(tokens: list) -> list:
             while top_token != '(':
                 postfix.append(top_token)
                 top_token = opstack.pop()
-        else:
+        elif is_binary(token):
+            # For binary operators, pop operators with higher or
+            # equal precedence
             while (opstack != []) and (
-                precedence[opstack[-1]] >= precedence[token]
+                (
+                    opstack[-1] in precedence and token in precedence and (
+                        precedence[opstack[-1]] >= precedence[token]
+                    )
+                ) or
+                (
+                    is_unary(
+                        opstack[-1]
+                    ) and unary_precedence >= precedence[token]
+                )
             ):
                 postfix.append(opstack.pop())
             opstack.append(token)
+        else:
+            # Skip tokens that are not mathematical symbols (stopwords, etc.)
+            continue
 
     while opstack != []:
         postfix.append(opstack.pop())
@@ -238,7 +286,7 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
                     total = Decimal(str(a)) / Decimal(str(b))
             else:
                 raise PostfixTokenEvaluationException(
-                    'Unknown token {}'.format(token)
+                    'Unknown token "{}"'.format(token)
                 )
 
         if total is not None:
