@@ -31,3 +31,9 @@ class EnglishWordTokenTestCase(TestCase):
         )
 
         self.assertEqual(result, '((50 * 1000)) + 1')
+
+    def test_numeric_values_with_squared_operator(self):
+        result = mathparse.replace_word_tokens(
+            '10 plus 2 squared times 3', language='ENG'
+        )
+        self.assertEqual(result, '10 + (2 ^ 2) * 3')
