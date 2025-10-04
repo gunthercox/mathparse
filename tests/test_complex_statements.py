@@ -21,7 +21,9 @@ class ComplexStatementsTestCase(TestCase):
 
     def test_numeric_values_with_square_root_operator(self):
         result = mathparse.parse(
-            '10 plus the square root of 4 times 3', language='ENG'
+            '10 plus the square root of 4 times 3',
+            language='ENG',
+            stopwords={'the'}
         )
         self.assertEqual(result, 10 + 2 * 3)
 
@@ -32,3 +34,21 @@ class ComplexStatementsTestCase(TestCase):
             language='ENG'
         )
         self.assertEqual(result, 1234 + 5678)
+
+    def test_invalid_expression(self):
+        with self.assertRaises(mathparse.PostfixTokenEvaluationException) as e:
+            mathparse.parse('two plus times three', language='ENG')
+
+        self.assertEqual(
+            str(e.exception),
+            'Insufficient values in expression for operator "+"'
+        )
+
+    def test_unsupported_mathematical_term(self):
+        with self.assertRaises(mathparse.PostfixTokenEvaluationException) as e:
+            mathparse.parse('two squiggle eight', language='ENG')
+
+        self.assertEqual(
+            str(e.exception),
+            'Unsupported mathematical term: "squiggle"'
+        )
