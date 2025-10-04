@@ -107,6 +107,7 @@ def replace_word_tokens(string: str, language: str) -> str:
     return the string with the words replaced with
     an operational equivalent.
     """
+    import re
     words = mathwords.word_groups_for_language(language)
 
     # Replace binary operator words with numeric operators
@@ -150,10 +151,12 @@ def replace_word_tokens(string: str, language: str) -> str:
             if re.search(compound_pattern, string):
                 string = re.sub(compound_pattern, compound_replacement, string)
 
-    # Replace number words with numeric values
+    # Replace number words with numeric values (using word boundaries to avoid partial matches)
     for number in frozenset(numbers.keys()):
-        if number in string:
-            string = string.replace(number, str(numbers[number]))
+        # Use word boundaries to prevent partial matches (e.g., "nine" in "nineteen")
+        pattern = r'\b' + re.escape(number) + r'\b'
+        if re.search(pattern, string):
+            string = re.sub(pattern, str(numbers[number]), string)
 
     # Remove words that are not registered mathematical terms
     # (typically stopwords)
@@ -202,6 +205,10 @@ def replace_word_tokens(string: str, language: str) -> str:
             )
 
     string = string.replace(') (', ') + (')
+
+    # Remove extra parentheses around all scale expressions to match expected format
+    # Convert ((number * scale)) to (number * scale) for all scales (100, 1000, etc.)
+    string = re.sub(r'\(\((\d+\s*\*\s*\d+)\)\)', r'(\1)', string)
 
     return string
 
