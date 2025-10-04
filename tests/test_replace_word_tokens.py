@@ -55,3 +55,9 @@ class EnglishWordTokenTestCase(TestCase):
             'one hundred times fifty four', language='ENG'
         )
         self.assertEqual(result, '(1 * 100) * (50 + 4)')
+
+    def test_hyphenated_numbers(self):
+        result = mathparse.replace_word_tokens(
+            'one hundred times fifty-four', language='ENG'
+         )
+        self.assertEqual(result, '(1 * 100) * (50 + 4)')

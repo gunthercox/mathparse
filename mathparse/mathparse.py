@@ -107,7 +107,6 @@ def replace_word_tokens(string: str, language: str) -> str:
     return the string with the words replaced with
     an operational equivalent.
     """
-    import re
     words = mathwords.word_groups_for_language(language)
 
     # Replace binary operator words with numeric operators
@@ -148,6 +147,15 @@ def replace_word_tokens(string: str, language: str) -> str:
     units_words = {word: value for word, value in numbers.items() if value in [
         1, 2, 3, 4, 5, 6, 7, 8, 9
     ]}
+
+    # Preprocess hyphenated compound numbers
+    # (e.g., "fifty-four" -> "fifty four")
+    for tens_word in tens_words.keys():
+        for units_word in units_words.keys():
+            hyphenated_pattern = tens_word + r'-' + units_word
+            space_separated = tens_word + ' ' + units_word
+            if re.search(hyphenated_pattern, string):
+                string = re.sub(hyphenated_pattern, space_separated, string)
 
     # Replace compound numbers first (before individual number replacement)
     for tens_word, tens_value in tens_words.items():
