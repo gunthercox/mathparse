@@ -466,16 +466,16 @@ def word_groups_for_language(language_code: str) -> dict[str, dict[str, str]]:
     return MATH_WORDS[language_code]
 
 
-def words_for_language(language_code: str) -> list[str]:
+def words_for_language(language_code: str) -> set[str]:
     """
     Return the math words for a language code.
     The language_code should be an ISO 639-2 language code.
     https://www.loc.gov/standards/iso639-2/php/code_list.php
     """
     word_groups = word_groups_for_language(language_code)
-    words = []
+    words = set()
 
     for group in word_groups:
-        words.extend(word_groups[group].keys())
+        words.update(word_groups[group].keys())
 
     return words

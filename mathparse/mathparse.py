@@ -140,7 +140,22 @@ def replace_word_tokens(string: str, language: str) -> str:
         if number in string:
             string = string.replace(number, str(numbers[number]))
 
+    # Remove words that are not registered mathematical terms
+    # (typically stopwords)
+    all_math_words = mathwords.words_for_language(language)
+    word_list = string.split()
+    symbol_characters = frozenset('0123456789+-*/^().')
+    filtered_words = []
+    for word in word_list:
+        # Keep the word if it is a mathematical symbol, a registered math word.
+        # A word is considered a mathematical symbol if it contains digits,
+        # operators, or parentheses.
+        contains_math_chars = any(c in word for c in symbol_characters)
+        if (is_symbol(word) or contains_math_chars or word in all_math_words):
+            filtered_words.append(word)
+
     # Replace scaling multipliers with numeric values
+    string = ' '.join(filtered_words)
     scales = words['scales']
     end_index_characters = mathwords.BINARY_OPERATORS
     end_index_characters.add('(')
@@ -211,7 +226,7 @@ def to_postfix(tokens: list) -> list:
             while top_token != '(':
                 postfix.append(top_token)
                 top_token = opstack.pop()
-        else:
+        elif is_binary(token):
             # For binary operators, pop operators with higher or
             # equal precedence
             while (opstack != []) and (
@@ -228,6 +243,9 @@ def to_postfix(tokens: list) -> list:
             ):
                 postfix.append(opstack.pop())
             opstack.append(token)
+        else:
+            # Skip tokens that are not mathematical symbols (stopwords, etc.)
+            continue
 
     while opstack != []:
         postfix.append(opstack.pop())
