@@ -9,11 +9,13 @@ BINARY_OPERATORS = {
 }
 
 MATH_WORDS = {
-        'DUT': {
-        'unary_operators': {
-            'kwadraat': '^ 2',
+    'DUT': {
+        'prefix_unary_operators': {
             'vierkantswortel van': 'sqrt',
             'wortel van': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'kwadraat': '^ 2'
         },
         'binary_operators': {
             'plus': '+',
