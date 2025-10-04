@@ -27,6 +27,8 @@ class ComplexStatementsTestCase(TestCase):
 
     def test_long_worded_number(self):
         result = mathparse.parse(
-            'one thousand two hundred thirty four plus five thousand six hundred seventy eight', language='ENG'
+            'one thousand two hundred thirty four plus '
+            'five thousand six hundred seventy eight',
+            language='ENG'
         )
         self.assertEqual(result, 1234 + 5678)

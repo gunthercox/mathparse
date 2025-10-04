@@ -135,13 +135,19 @@ def replace_word_tokens(string: str, language: str) -> str:
                 replacement = r'(\1 ' + postfix_unary_operators[operator] + ')'
                 string = re.sub(pattern, replacement, string)
 
-    # Handle compound numbers (e.g., "twenty one" -> "(20 + 1)", "fifty four" -> "(50 + 4)")
+    # Handle compound numbers:
+    # (e.g., "twenty one" -> "(20 + 1)", "fifty four" -> "(50 + 4)")
     numbers = words['numbers']
 
     # Create regex patterns for compound numbers
-    # Pattern matches: (tens_word) (units_word) where tens_word is 20,30,40,...,90 and units_word is 1-9
-    tens_words = {word: value for word, value in numbers.items() if value in [20, 30, 40, 50, 60, 70, 80, 90]}
-    units_words = {word: value for word, value in numbers.items() if value in [1, 2, 3, 4, 5, 6, 7, 8, 9]}
+    # Pattern matches: (tens_word) (units_word) where tens_word is
+    # 20,30,40,...,90 and units_word is 1-9
+    tens_words = {word: value for word, value in numbers.items() if value in [
+        20, 30, 40, 50, 60, 70, 80, 90
+    ]}
+    units_words = {word: value for word, value in numbers.items() if value in [
+        1, 2, 3, 4, 5, 6, 7, 8, 9
+    ]}
 
     # Replace compound numbers first (before individual number replacement)
     for tens_word, tens_value in tens_words.items():
@@ -151,9 +157,11 @@ def replace_word_tokens(string: str, language: str) -> str:
             if re.search(compound_pattern, string):
                 string = re.sub(compound_pattern, compound_replacement, string)
 
-    # Replace number words with numeric values (using word boundaries to avoid partial matches)
+    # Replace number words with numeric values (using word boundaries to avoid
+    # partial matches)
     for number in frozenset(numbers.keys()):
-        # Use word boundaries to prevent partial matches (e.g., "nine" in "nineteen")
+        # Use word boundaries to prevent partial matches
+        # (e.g., "nine" in "nineteen")
         pattern = r'\b' + re.escape(number) + r'\b'
         if re.search(pattern, string):
             string = re.sub(pattern, str(numbers[number]), string)
@@ -206,8 +214,8 @@ def replace_word_tokens(string: str, language: str) -> str:
 
     string = string.replace(') (', ') + (')
 
-    # Remove extra parentheses around all scale expressions to match expected format
-    # Convert ((number * scale)) to (number * scale) for all scales (100, 1000, etc.)
+    # Remove extra parentheses around all scale expressions to simplify output
+    # Convert ((number * scale)) to (number * scale) for all scales
     string = re.sub(r'\(\((\d+\s*\*\s*\d+)\)\)', r'(\1)', string)
 
     return string
