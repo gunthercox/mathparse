@@ -134,11 +134,45 @@ def replace_word_tokens(string: str, language: str) -> str:
                 replacement = r'(\1 ' + postfix_unary_operators[operator] + ')'
                 string = re.sub(pattern, replacement, string)
 
-    # Replace number words with numeric values
+    # Handle compound numbers:
+    # (e.g., "twenty one" -> "(20 + 1)", "fifty four" -> "(50 + 4)")
     numbers = words['numbers']
+
+    # Create regex patterns for compound numbers
+    # Pattern matches: (tens_word) (units_word) where tens_word is
+    # 20,30,40,...,90 and units_word is 1-9
+    tens_words = {word: value for word, value in numbers.items() if value in [
+        20, 30, 40, 50, 60, 70, 80, 90
+    ]}
+    units_words = {word: value for word, value in numbers.items() if value in [
+        1, 2, 3, 4, 5, 6, 7, 8, 9
+    ]}
+
+    # Preprocess hyphenated compound numbers
+    # (e.g., "fifty-four" -> "fifty four")
+    for tens_word in tens_words.keys():
+        for units_word in units_words.keys():
+            hyphenated_pattern = tens_word + r'-' + units_word
+            space_separated = tens_word + ' ' + units_word
+            if re.search(hyphenated_pattern, string):
+                string = re.sub(hyphenated_pattern, space_separated, string)
+
+    # Replace compound numbers first (before individual number replacement)
+    for tens_word, tens_value in tens_words.items():
+        for units_word, units_value in units_words.items():
+            compound_pattern = tens_word + r'\s+' + units_word
+            compound_replacement = f'({tens_value} + {units_value})'
+            if re.search(compound_pattern, string):
+                string = re.sub(compound_pattern, compound_replacement, string)
+
+    # Replace number words with numeric values (using word boundaries to avoid
+    # partial matches)
     for number in frozenset(numbers.keys()):
-        if number in string:
-            string = string.replace(number, str(numbers[number]))
+        # Use word boundaries to prevent partial matches
+        # (e.g., "nine" in "nineteen")
+        pattern = r'\b' + re.escape(number) + r'\b'
+        if re.search(pattern, string):
+            string = re.sub(pattern, str(numbers[number]), string)
 
     # Remove words that are not registered mathematical terms
     # (typically stopwords)
@@ -187,6 +221,10 @@ def replace_word_tokens(string: str, language: str) -> str:
             )
 
     string = string.replace(') (', ') + (')
+
+    # Remove extra parentheses around all scale expressions to simplify output
+    # Convert ((number * scale)) to (number * scale) for all scales
+    string = re.sub(r'\(\((\d+\s*\*\s*\d+)\)\)', r'(\1)', string)
 
     return string
 
