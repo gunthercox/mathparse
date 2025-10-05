@@ -52,3 +52,15 @@ class ComplexStatementsTestCase(TestCase):
             str(e.exception),
             'Unsupported mathematical term: "squiggle"'
         )
+
+    def test_stopwords_contained_within_expressions(self):
+        """
+        Stopwords should not be removed if they are a part of a valid
+        mathematical expression.
+        """
+        result = mathparse.parse(
+            'the square root of four',
+            language='ENG',
+            stopwords={'the', 'of'}
+        )
+        self.assertEqual(result, 2)
