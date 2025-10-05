@@ -1,8 +1,7 @@
-import math
-
 """
 Utility methods for getting math word terms.
 """
+import math
 
 BINARY_OPERATORS = {
     '^', '*', '/', '+', '-'
@@ -642,7 +641,7 @@ MATH_WORDS = {
             'ล้านล้าน': 1000000000000
         }
     },
-    'SIMPLIFIED_CHINESE': {
+    'CHI': {
         'unary_operators': {
             '平方': '^ 2',
             '立方': '^ 3',

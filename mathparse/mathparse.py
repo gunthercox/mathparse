@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 """
 Methods for evaluating mathematical equations in strings.
 """
@@ -106,7 +105,7 @@ def replace_word_tokens_simplified_chinese(string):
     return the string with the words replaced with
     an operational equivalent.
     """
-    words = mathwords.word_groups_for_language('SIMPLIFIED_CHINESE')
+    words = mathwords.word_groups_for_language('CHI')
 
     # Replace operator words with numeric operators
     operators = words['binary_operators'].copy()
@@ -124,7 +123,7 @@ def replace_word_tokens_simplified_chinese(string):
 
     # 九千八百万九千八百——> 98009800
     def chinese_string_to_num(str):
-        if str is '':
+        if str == '':
             return 0
 
         if str in digits:
@@ -525,7 +524,7 @@ def parse(
     """
     if language:
 
-        if language == 'SIMPLIFIED_CHINESE':
+        if language == 'CHI':
             string = replace_word_tokens_simplified_chinese(string)
         else:
             string = replace_word_tokens(string, language, stopwords)
