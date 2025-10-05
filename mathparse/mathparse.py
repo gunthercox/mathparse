@@ -442,6 +442,10 @@ def tokenize(string: str, language: str = None, escape: str = '___') -> list:
         character = string[-1]
         string = string[:-1] + ' ' + character
 
+    # Binary operators must have space around them to be tokenized properly
+    for operator in mathwords.BINARY_OPERATORS:
+        string = string.replace(operator, f' {operator} ')
+
     # Parenthesis must have space around them to be tokenized properly
     string = string.replace('(', ' ( ')
     string = string.replace(')', ' ) ')
