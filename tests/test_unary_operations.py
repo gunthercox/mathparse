@@ -36,3 +36,8 @@ class UnaryWordOperatorTestCase(TestCase):
         result = mathparse.parse('square root of 4', language='ENG')
 
         self.assertEqual(result, 2)
+
+    def test_negative_number(self):
+        result = mathparse.parse('-4 + 2')
+
+        self.assertEqual(result, -2)
