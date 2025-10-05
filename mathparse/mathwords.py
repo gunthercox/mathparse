@@ -65,7 +65,8 @@ MATH_WORDS = {
     },
     'ENG': {
         'prefix_unary_operators': {
-            'square root of': 'sqrt'
+            'square root of': 'sqrt',
+            'negative': 'neg'
         },
         'postfix_unary_operators': {
             'squared': '^ 2',
@@ -694,7 +695,8 @@ MATH_WORDS = {
     'CHI': {
         'prefix_unary_operators': {
             '平方根': 'sqrt',
-            '开方': 'sqrt'
+            '开方': 'sqrt',
+            '负': 'neg'
         },
         'postfix_unary_operators': {
             '平方': '^ 2',
@@ -793,7 +795,10 @@ UNARY_FUNCTIONS = {
     'sqrt': math.sqrt,
 
     # Most people assume a log of base 10 when a base is not specified
-    'log': math.log10
+    'log': math.log10,
+
+    # Unary minus function for negative numbers
+    'neg': lambda x: -x
 }
 
 
