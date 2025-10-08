@@ -347,9 +347,9 @@ def preprocess_unary_operators(tokens: list) -> list:
     Preprocess tokens to convert unary minus to the 'neg' function.
 
     A minus sign is considered unary (negative) if it appears:
-    - At the beginning of the expression
-    - After an opening parenthesis '('
-    - After a binary operator (+, -, *, /, ^)
+    * At the beginning of the expression
+    * After an opening parenthesis '('
+    * After a binary operator `(+, -, *, /, ^)`
     """
     if not tokens:
         return tokens
