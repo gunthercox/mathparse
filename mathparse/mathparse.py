@@ -216,6 +216,20 @@ def replace_word_tokens(
     Given a string and an ISO 639-2 language code,
     return the string with the words replaced with
     an operational equivalent.
+
+    Args:
+        string (str): The input string containing a mathematical expression
+                      with words.
+
+        language (str): ISO 639-2 language code for word-based parsing.
+
+        stopwords (set[str], optional): A set of words to ignore during
+                                       parsing. This can be used to filter out
+                                       non-mathematical words in expressions.
+
+    Returns:
+        str: The input string with word-based mathematical terms replaced
+             with their symbolic equivalents.
     """
     words = mathwords.word_groups_for_language(language)
 
