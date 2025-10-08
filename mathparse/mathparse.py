@@ -98,7 +98,9 @@ def find_word_groups(string: str, words: list) -> list:
     return result
 
 
-def replace_word_tokens_simplified_chinese(string):
+def replace_word_tokens_simplified_chinese(
+    string, stopwords: set[str] = None
+) -> str:
     """
     simplified Chinese version:
     Given a string and an ISO 639-2 language code,
@@ -109,7 +111,7 @@ def replace_word_tokens_simplified_chinese(string):
 
     # Replace operator words with numeric operators
     operators = words['binary_operators'].copy()
-    operators.update(words['unary_operators'])
+    operators.update(words['prefix_unary_operators'])
     for operator in list(operators.keys()):
         if operator in string:
             # 中文没有分隔符，后面需要靠分隔符分割式子，每次识别一个符号都将其分开来
@@ -185,16 +187,22 @@ def replace_word_tokens(
     """
     words = mathwords.word_groups_for_language(language)
 
-    # Replace binary operator words with numeric operators
+    # Process operators by length (longest first) to handle compound operators
     binary_operators = words['binary_operators']
-    for operator in frozenset(binary_operators.keys()):
+    sorted_operators = sorted(binary_operators.keys(), key=len, reverse=True)
+    for operator in sorted_operators:
         if operator in string:
             string = string.replace(operator, binary_operators[operator])
 
     # Handle prefix unary operators (like "square root of")
     if 'prefix_unary_operators' in words:
         prefix_unary_operators = words['prefix_unary_operators']
-        for operator in frozenset(prefix_unary_operators.keys()):
+        # Sort by length to handle compound operators where a shorter token
+        # is a substring of a longer token
+        sorted_prefix_operators = sorted(
+            prefix_unary_operators.keys(), key=len, reverse=True
+        )
+        for operator in sorted_prefix_operators:
             if operator in string:
                 string = string.replace(
                     operator, prefix_unary_operators[operator]
@@ -203,7 +211,12 @@ def replace_word_tokens(
     # Handle postfix unary operators (like "squared", "cubed")
     if 'postfix_unary_operators' in words:
         postfix_unary_operators = words['postfix_unary_operators']
-        for operator in frozenset(postfix_unary_operators.keys()):
+        # Sort by length to handle compound operators where a shorter token
+        # is a substring of a longer token
+        sorted_postfix_operators = sorted(
+            postfix_unary_operators.keys(), key=len, reverse=True
+        )
+        for operator in sorted_postfix_operators:
             if operator in string:
                 # Captures the number/operand before the unary operator
                 pattern = r'(\w+)\s+' + re.escape(operator)
@@ -260,8 +273,7 @@ def replace_word_tokens(
 
     # Replace scaling multipliers with numeric values
     scales = words['scales']
-    end_index_characters = mathwords.BINARY_OPERATORS
-    end_index_characters.add('(')
+    end_index_characters = mathwords.BINARY_OPERATORS | {'('}
 
     word_matches = find_word_groups(string, frozenset(scales.keys()))
 
@@ -296,6 +308,48 @@ def replace_word_tokens(
     string = re.sub(r'\(\((\d+\s*\*\s*\d+)\)\)', r'(\1)', string)
 
     return string
+
+
+def preprocess_unary_operators(tokens: list) -> list:
+    """
+    Preprocess tokens to convert unary minus to the 'neg' function.
+
+    A minus sign is considered unary (negative) if it appears:
+    - At the beginning of the expression
+    - After an opening parenthesis '('
+    - After a binary operator (+, -, *, /, ^)
+    """
+    if not tokens:
+        return tokens
+
+    processed_tokens = []
+
+    binary_operators = mathwords.BINARY_OPERATORS | {'('}
+
+    for i, token in enumerate(tokens):
+        if token == '-':
+            # Check if this minus should be treated as unary
+            is_unary_minus = False
+
+            if i == 0:
+                # The first token is unary minus
+                is_unary_minus = True
+            elif i > 0:
+                prev_token = tokens[i - 1]
+                # A unary minus after opening parenthesis or binary operators
+                if prev_token in binary_operators:
+                    is_unary_minus = True
+
+            if is_unary_minus:
+                # Convert the unary minus to 'neg' function
+                processed_tokens.append('neg')
+            else:
+                # Keep as binary minus
+                processed_tokens.append(token)
+        else:
+            processed_tokens.append(token)
+
+    return processed_tokens
 
 
 def to_postfix(tokens: list) -> list:
@@ -527,13 +581,15 @@ def parse(
         - Division by zero returns 'undefined' instead of raising an exception
     """
     if language:
-
         if language == 'CHI':
-            string = replace_word_tokens_simplified_chinese(string)
+            string = replace_word_tokens_simplified_chinese(
+                string, stopwords
+            )
         else:
             string = replace_word_tokens(string, language, stopwords)
 
-    tokens = tokenize(string)
+    tokens = tokenize(string, language)
+    tokens = preprocess_unary_operators(tokens)
     postfix = to_postfix(tokens)
 
     return evaluate_postfix(postfix)
