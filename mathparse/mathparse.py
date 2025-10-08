@@ -146,9 +146,13 @@ def replace_word_tokens_simplified_chinese(
             )
 
     # chinese_scales用list的原因是为了保持从大到小的顺序，亿、万、千...
+    # Sort scales by their numeric value (largest first) to ensure correct
+    # parsing. For example, '千' (1000) should be found before '百' (100)
     digits = set(words['numbers'].keys())
-    scales = list(words['scales'].keys())
-    digits_scales = words['numbers']
+    scales = sorted(
+        words['scales'].keys(), key=lambda x: words['scales'][x], reverse=True
+    )
+    digits_scales = words['numbers'].copy()
     digits_scales.update(words['scales'])
 
     # 九千八百万九千八百——> 98009800
