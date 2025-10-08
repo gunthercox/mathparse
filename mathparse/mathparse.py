@@ -109,13 +109,41 @@ def replace_word_tokens_simplified_chinese(
     """
     words = mathwords.word_groups_for_language('CHI')
 
-    # Replace operator words with numeric operators
-    operators = words['binary_operators'].copy()
-    operators.update(words['prefix_unary_operators'])
-    for operator in list(operators.keys()):
+    # Handle special Chinese power construction patterns FIRST
+    # In Chinese, '的...次方' forms a power construction where:
+    # - '的' acts as a possessive/linking word (provides the ^ operator)
+    # - '次方' is a suffix meaning "power" (should be removed, not replaced)
+    # - '次幂' is similar to '次方'
+    # Example: 二的四次方 = 2's 4th power = 2 ^ 4
+    # We need to remove '次方' and '次幂' BEFORE they get replaced as operators
+    string = string.replace('次方', ' ')
+    string = string.replace('次幂', ' ')
+
+    # Collect all operators (binary, prefix unary, postfix unary)
+    # and process them by length (longest first) to handle cases where
+    # a shorter operator is a substring of a longer one
+    # Example: '平方' (squared) vs '平方根' (square root)
+    all_operators = {}
+
+    # Add binary operators
+    all_operators.update(words['binary_operators'])
+
+    # Add prefix unary operators
+    all_operators.update(words['prefix_unary_operators'])
+
+    # Add postfix unary operators
+    if 'postfix_unary_operators' in words:
+        all_operators.update(words['postfix_unary_operators'])
+
+    # Sort all operators by length (longest first)
+    sorted_operators = sorted(all_operators.keys(), key=len, reverse=True)
+
+    for operator in sorted_operators:
         if operator in string:
             # 中文没有分隔符，后面需要靠分隔符分割式子，每次识别一个符号都将其分开来
-            string = string.replace(operator, operators[operator]+' ')
+            string = string.replace(
+                operator, ' ' + all_operators[operator] + ' '
+            )
 
     # chinese_scales用list的原因是为了保持从大到小的顺序，亿、万、千...
     digits = set(words['numbers'].keys())
@@ -495,6 +523,27 @@ def tokenize(string: str, language: str = None, escape: str = '___') -> list:
     if len(string) and not string[-1].isalnum():
         character = string[-1]
         string = string[:-1] + ' ' + character
+
+    # If language is specified, normalize compound operators by removing
+    # spaces between their characters. This handles cases like '乘 以'
+    # which should be treated as the single compound operator '乘以'.
+    # Process by length (longest first) to avoid partial matches.
+    if language:
+        words = mathwords.words_for_language(language)
+
+        # Sort all phrases by length (longest first) to handle cases where
+        # a shorter phrase is a substring of a longer one
+        phrases_by_length = sorted(words, key=len, reverse=True)
+
+        for phrase in phrases_by_length:
+            # For multi-character phrases, create a spaced version
+            # and replace it with the non-spaced version
+            if len(phrase) > 1:
+                # Create pattern with optional spaces between each character
+                # For example, '乘以' could appear as '乘 以' or '乘  以'
+                spaced_phrase = ' '.join(phrase)
+                # Replace spaced version with non-spaced version
+                string = string.replace(spaced_phrase, phrase)
 
     # Binary operators must have space around them to be tokenized properly
     for operator in mathwords.BINARY_OPERATORS:
