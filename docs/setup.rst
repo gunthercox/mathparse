@@ -62,3 +62,15 @@ To run the test suite, use unittest:
 .. code-block:: shell
 
     python -m unittest discover tests
+
+To release a new version, update the version number in `mathparse/__init__.py`, then run:
+
+.. code-block:: shell
+
+    python -m build
+
+The Python package files are uploaded to PyPi using:
+
+.. code-block:: shell
+
+    twine upload dist/*
