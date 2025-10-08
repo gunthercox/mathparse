@@ -234,4 +234,4 @@ Language Codes
 
    List of supported ISO 639-2 language codes.
    
-   Currently supported: ``['ENG', 'FRE', 'GER', 'GRE', 'ITA', 'MAR', 'RUS', 'POR']``
+   Currently supported: ``['DUT', 'ENG', 'ESP', 'FRE', 'GER', 'GRE', 'ITA', 'MAR', 'POR', 'RUS', 'THA', 'UKR']``

@@ -18,7 +18,7 @@ Usage
     mathparse.parse('50 * (85 / 100)')
     >>> 42.5
 
-    mathparse.parse('one hundred times fifty four', mathparse.codes.ENG)
+    mathparse.parse('one hundred times fifty four', language='ENG')
     >>> 5400
 
     mathparse.parse('(seven * nine) + 8 - (45 plus two)', language='ENG')

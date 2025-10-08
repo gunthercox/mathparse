@@ -15,9 +15,15 @@ The following languages are supported with their ISO 639-2 language codes:
    * - Code
      - Language
      - Example
+   * - DUT
+     - Dutch
+     - ``'vijftig maal twintig plus tien'``
    * - ENG
      - English
      - ``'fifty times twenty plus ten'``
+   * - ESP
+     - Spanish
+     - ``'cincuenta por veinte más diez'``
    * - FRE
      - French
      - ``'cinquante fois vingt plus dix'``
@@ -33,12 +39,18 @@ The following languages are supported with their ISO 639-2 language codes:
    * - MAR
      - Marathi
      - ``'पन्नास गुणाकार वीस बेरीज दहा'``
-   * - RUS
-     - Russian
-     - ``'пятьдесят умножить на двадцать плюс десять'``
    * - POR
      - Portuguese
      - ``'cinquenta vezes vinte mais dez'``
+   * - RUS
+     - Russian
+     - ``'пятьдесят умножить на двадцать плюс десять'``
+   * - THA
+     - Thai
+     - ``'ห้าสิบ คูณ ยี่สิบ บวก สิบ'``
+   * - UKR
+     - Ukrainian
+     - ``'п'ятдесят помножити на двадцять додати десять'``
 
 Language Usage Examples
 -----------------------
@@ -186,6 +198,80 @@ Marathi (MAR)
     # Note: Marathi uses Devanagari numerals
     mathparse.parse('सात गुणाकार नऊ', language='MAR')
     >>> 63
+
+Dutch (DUT)
++++++++++++
+
+.. code-block:: python
+
+    # Basic arithmetic
+    mathparse.parse('vijf plus drie', language='DUT')
+    >>> 8
+
+    # Multiplication
+    mathparse.parse('zes maal negen', language='DUT')
+    >>> 54
+
+    # Powers and roots
+    mathparse.parse('vier kwadraat', language='DUT')
+    >>> 16
+
+    mathparse.parse('vierkantswortel van zestien', language='DUT')
+    >>> 4.0
+
+Spanish (ESP)
++++++++++++++
+
+.. code-block:: python
+
+    # Basic arithmetic
+    mathparse.parse('cinco más tres', language='ESP')
+    >>> 8
+
+    # Multiplication
+    mathparse.parse('seis por nueve', language='ESP')
+    >>> 54
+
+    # Powers and roots
+    mathparse.parse('cuatro al cuadrado', language='ESP')
+    >>> 16
+
+    mathparse.parse('raiz cuadrada de dieciséis', language='ESP')
+    >>> 4.0
+
+Ukrainian (UKR)
++++++++++++++++
+
+.. code-block:: python
+
+    # Basic arithmetic
+    mathparse.parse('п'ять додати три', language='UKR')
+    >>> 8
+
+    # Multiplication
+    mathparse.parse('шість помножити на дев'ять', language='UKR')
+    >>> 54
+
+    # Powers
+    mathparse.parse('чотири у квадраті', language='UKR')
+    >>> 16
+
+Thai (THA)
+++++++++++
+
+.. code-block:: python
+
+    # Basic arithmetic
+    mathparse.parse('ห้า บวก สาม', language='THA')
+    >>> 8
+
+    # Multiplication
+    mathparse.parse('หก คูณ เก้า', language='THA')
+    >>> 54
+
+    # Powers
+    mathparse.parse('สี่ ยกกำลังสอง', language='THA')
+    >>> 16
 
 Common Operators by Language
 ----------------------------
