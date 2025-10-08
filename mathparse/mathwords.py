@@ -193,7 +193,6 @@ MATH_WORDS = {
             'multipliziert mit': '*',
             'im Quadrat': '^ 2',
             'hoch zwei': '^ 2',
-            'quadriert': '^ 2',
             'cubed': '^ 3',
             'hoch': '^'
         },
@@ -702,8 +701,7 @@ MATH_WORDS = {
             '平方': '^ 2',
             '立方': '^ 3',
             '的平方': '^ 2',
-            '的立方': '^ 3',
-            '开方': 'sqrt'
+            '的立方': '^ 3'
         },
         'binary_operators': {
             '加': '+',
