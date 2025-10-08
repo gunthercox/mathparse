@@ -74,6 +74,21 @@ class PositiveIntegerTestCase(TestCase):
 
         self.assertEqual(str(result), '12.04')
 
+    def test_operation_precedence(self):
+        result = mathparse.parse('2 + 3 * (4 - 2) ^ 2 / 2')
+
+        self.assertEqual(result, 8)
+
+    def test_tokens_with_extra_spaces(self):
+        result = mathparse.parse('  2   +    3   * (  4 - 2 ) ^ 2 / 2  ')
+
+        self.assertEqual(result, 8)
+
+    def test_tokens_with_no_spaces(self):
+        result = mathparse.parse('2+3*(4-2)^2/2')
+
+        self.assertEqual(result, 8)
+
 
 class PositiveFloatTestCase(TestCase):
 
@@ -96,3 +111,11 @@ class PositiveFloatTestCase(TestCase):
         result = mathparse.parse('0.6 / 0.2')
 
         self.assertEqual(result, 3)
+
+
+class WordOperatorTestCase(TestCase):
+
+    def test_power_of(self):
+        result = mathparse.parse('2 to the power of 3', language='ENG')
+
+        self.assertEqual(result, 8)

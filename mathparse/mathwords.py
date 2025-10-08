@@ -65,7 +65,8 @@ MATH_WORDS = {
     },
     'ENG': {
         'prefix_unary_operators': {
-            'square root of': 'sqrt'
+            'square root of': 'sqrt',
+            'negative': 'neg'
         },
         'postfix_unary_operators': {
             'squared': '^ 2',
@@ -117,6 +118,13 @@ MATH_WORDS = {
         }
     },
     'FRE': {
+        'prefix_unary_operators': {
+            'racine carrée de': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'au carré': '^ 2',
+            'au cube': '^ 3'
+        },
         'binary_operators': {
             'plus': '+',
             'divisé par': '/',
@@ -127,6 +135,7 @@ MATH_WORDS = {
             'à la puissance': '^'
         },
         'numbers': {
+            'zéro': 0,
             'un': 1,
             'deux': 2,
             'trois': 3,
@@ -167,6 +176,14 @@ MATH_WORDS = {
         }
     },
     'GER': {
+        'prefix_unary_operators': {
+            'Quadratwurzel von': 'sqrt',
+            'Wurzel von': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'quadriert': '^ 2',
+            'hoch drei': '^ 3'
+        },
         'binary_operators': {
             'plus': '+',
             'geteilt durch': '/',
@@ -176,11 +193,11 @@ MATH_WORDS = {
             'multipliziert mit': '*',
             'im Quadrat': '^ 2',
             'hoch zwei': '^ 2',
-            'quadriert': '^ 2',
             'cubed': '^ 3',
             'hoch': '^'
         },
         'numbers': {
+            'null': 0,
             'eins': 1,
             'zwei': 2,
             'drei': 3,
@@ -275,6 +292,13 @@ MATH_WORDS = {
         }
     },
     'ITA': {
+        'prefix_unary_operators': {
+            'radice quadrata di': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'al quadrato': '^ 2',
+            'al cubo': '^ 3'
+        },
         'binary_operators': {
             'più': '+',
             'diviso': '/',
@@ -285,6 +309,7 @@ MATH_WORDS = {
             'alla potenza di': '^'
         },
         'numbers': {
+            'zero': 0,
             'uno': 1,
             'due': 2,
             'tre': 3,
@@ -322,6 +347,13 @@ MATH_WORDS = {
         }
     },
     'MAR': {
+        'prefix_unary_operators': {
+            'वर्गमूल': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'वर्ग': '^ 2',
+            'घन': '^ 3'
+        },
         'binary_operators': {
             'बेरीज': '+',
             'भागाकार': '/',
@@ -371,6 +403,14 @@ MATH_WORDS = {
         }
     },
     'RUS': {
+        'prefix_unary_operators': {
+            'квадратный корень из': 'sqrt',
+            'корень из': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'в квадрате': '^ 2',
+            'в кубе': '^ 3'
+        },
         'binary_operators': {
             'плюс': '+',
             'разделить': '/',
@@ -388,6 +428,7 @@ MATH_WORDS = {
             'степень': '^'
         },
         'numbers': {
+            'ноль': 0,
             'один': 1,
             'два': 2,
             'три': 3,
@@ -479,6 +520,14 @@ MATH_WORDS = {
         }
     },
     'UKR': {
+        'prefix_unary_operators': {
+            'квадратний корінь з': 'sqrt',
+            'корінь з': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'у квадраті': '^ 2',
+            'у кубі': '^ 3'
+        },
         'binary_operators': {
             'додати': '+',
             'розділити': '/',
@@ -496,6 +545,7 @@ MATH_WORDS = {
             'ступінь': '^'
         },
         'numbers': {
+            'нуль': 0,
             'один': 1,
             'два': 2,
             'три': 3,
@@ -642,31 +692,40 @@ MATH_WORDS = {
         }
     },
     'CHI': {
-        'unary_operators': {
+        'prefix_unary_operators': {
+            '平方根': 'sqrt',
+            '开方': 'sqrt',
+            '负': 'neg'
+        },
+        'postfix_unary_operators': {
             '平方': '^ 2',
             '立方': '^ 3',
-            '开方': 'sqrt'
+            '的平方': '^ 2',
+            '的立方': '^ 3'
         },
         'binary_operators': {
             '加': '+',
+            '加上': '+',
+            '加法': '+',
             '除以': '/',
+            '除': '/',
+            '除法': '/',
             '减': '-',
+            '减去': '-',
+            '减法': '-',
             '乘': '*',
-            '次方': '^'
+            '乘以': '*',
+            '乘法': '*',
+            '乘上': '*',
+            '倍': '*',
+            '的': '^',
+            '次方': '^',
+            '次幂': '^'
         },
         'numbers': {
-            '二十': 20,
-            '三十': 30,
-            '四十': 40,
-            '五十': 50,
-            '六十': 60,
-            '七十': 70,
-            '八十': 80,
-            '九十': 90,
             '零': 0,
             '一': 1,
             '二': 2,
-            '两': 2,
             '三': 3,
             '四': 4,
             '五': 5,
@@ -684,13 +743,39 @@ MATH_WORDS = {
             '十七': 17,
             '十八': 18,
             '十九': 19,
+            '二十': 20,
+            '三十': 30,
+            '四十': 40,
+            '五十': 50,
+            '六十': 60,
+            '七十': 70,
+            '八十': 80,
+            '九十': 90,
+            '壹': 1,
+            '贰': 2,
+            '两': 2,
+            '叁': 3,
+            '肆': 4,
+            '伍': 5,
+            '陆': 6,
+            '柒': 7,
+            '捌': 8,
+            '玖': 9,
+            '拾': 10
         },
         'scales': {
-            '亿': 100000000,
-            '万': 10000,
-            '千': 1000,
-            '百': 100,
             '十': 10,
+            '百': 100,
+            '千': 1000,
+            '万': 10000,
+            '十万': 100000,
+            '百万': 1000000,
+            '千万': 10000000,
+            '亿': 100000000,
+            '十亿': 1000000000,
+            '百亿': 10000000000,
+            '千亿': 100000000000,
+            '万亿': 1000000000000
         }
     }
 }
@@ -709,7 +794,10 @@ UNARY_FUNCTIONS = {
     'sqrt': math.sqrt,
 
     # Most people assume a log of base 10 when a base is not specified
-    'log': math.log10
+    'log': math.log10,
+
+    # Unary minus function for negative numbers
+    'neg': lambda x: -x
 }
 
 
