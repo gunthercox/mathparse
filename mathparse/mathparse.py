@@ -5,7 +5,6 @@ from decimal import Decimal
 from typing import Union
 from . import mathwords
 import re
-import unicodedata
 
 
 class PostfixTokenEvaluationException(Exception):
