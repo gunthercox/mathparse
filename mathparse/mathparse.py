@@ -5,6 +5,7 @@ from decimal import Decimal
 from typing import Union
 from . import mathwords
 import re
+import unicodedata
 
 
 class PostfixTokenEvaluationException(Exception):
@@ -77,6 +78,41 @@ def is_word(word: str, language: str) -> bool:
     words = mathwords.words_for_language(language)
 
     return word in words
+
+
+def create_unicode_word_boundary_pattern(word: str) -> str:
+    """
+    Create a regex pattern with Unicode-aware word boundaries.
+
+    Standard regex \\b word boundaries don't work with non-ASCII characters
+    (e.g., Devanagari, Arabic, Hebrew, Chinese, Thai, etc.). This function
+    creates a pattern that works across all Unicode scripts.
+
+    Args:
+        word (str): The word to create a boundary pattern for
+
+    Returns:
+        str: A regex pattern string with proper Unicode boundaries
+
+    Examples:
+        >>> create_unicode_word_boundary_pattern("two")
+        '(?<![\\w])two(?![\\w])'
+        >>> create_unicode_word_boundary_pattern("दो")  # Hindi "two"
+        '(?:^|(?<=[\\s+\\-*/^()]))दो(?:$|(?=[\\s+\\-*/^()]))'
+    """
+    # Check if word contains only ASCII alphanumeric characters
+    if word.isascii() and word.replace('-', '').replace("'", '').isalnum():
+        # For ASCII words, use standard word boundaries
+        return r'\b' + re.escape(word) + r'\b'
+    else:
+        # For non-ASCII (Unicode) words, use space/operator boundaries
+        # This pattern matches the word when it's:
+        # - At the start of string OR preceded by whitespace/operator
+        # - At the end of string OR followed by whitespace/operator
+        escaped_word = re.escape(word)
+        # Boundary characters: whitespace, operators, parentheses
+        boundary = r'[\s+\-*/^()]'
+        return f'(?:^|(?<={boundary})){escaped_word}(?:$|(?={boundary}))'
 
 
 def find_word_groups(string: str, words: list) -> list:
@@ -302,9 +338,10 @@ def replace_word_tokens(
 
     # Replace number words with numeric values
     for number in frozenset(numbers.keys()):
-        # Use word boundaries to prevent partial matches
-        # (e.g., "nine" in "nineteen")
-        pattern = r'\b' + re.escape(number) + r'\b'
+        # Use Unicode-aware word boundaries to prevent partial matches
+        # (e.g., "nine" in "nineteen") and support non-ASCII scripts
+        # (e.g., Devanagari, Arabic, Hebrew, Chinese, etc.)
+        pattern = create_unicode_word_boundary_pattern(number)
         if re.search(pattern, string):
             string = re.sub(pattern, str(numbers[number]), string)
 
