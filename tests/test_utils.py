@@ -20,6 +20,9 @@ class BooleanChecksTestCase(TestCase):
     def test_is_constant(self):
         self.assertTrue(mathparse.is_constant('pi'))
 
+    def test_is_constant_unicode_pi(self):
+        self.assertTrue(mathparse.is_constant('π'))
+
     def test_is_not_constant(self):
         self.assertFalse(mathparse.is_constant('+'))
 

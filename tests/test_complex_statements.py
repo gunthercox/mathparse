@@ -64,3 +64,17 @@ class ComplexStatementsTestCase(TestCase):
             stopwords={'the', 'of'}
         )
         self.assertEqual(result, 2)
+
+    def test_unicode_pi_symbol(self):
+        """
+        Test using the unicode π symbol as a constant.
+        """
+        result = mathparse.parse('2 * π')
+        self.assertAlmostEqual(result, 2 * 3.141693, places=5)
+
+    def test_unicode_pi_in_expression(self):
+        """
+        Test using the unicode π symbol in a complex expression.
+        """
+        result = mathparse.parse('π + 1')
+        self.assertAlmostEqual(result, 3.141693 + 1, places=5)
