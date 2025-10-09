@@ -11,7 +11,8 @@ MATH_WORDS = {
     'DUT': {
         'prefix_unary_operators': {
             'vierkantswortel van': 'sqrt',
-            'wortel van': 'sqrt'
+            'wortel van': 'sqrt',
+            'logaritme van': 'log'
         },
         'postfix_unary_operators': {
             'kwadraat': '^ 2'
@@ -66,7 +67,9 @@ MATH_WORDS = {
     'ENG': {
         'prefix_unary_operators': {
             'square root of': 'sqrt',
-            'negative': 'neg'
+            'negative': 'neg',
+            'logarithm of': 'log',
+            'log of': 'log'
         },
         'postfix_unary_operators': {
             'squared': '^ 2',
@@ -120,7 +123,8 @@ MATH_WORDS = {
     },
     'FRE': {
         'prefix_unary_operators': {
-            'racine carrée de': 'sqrt'
+            'racine carrée de': 'sqrt',
+            'logarithme de': 'log'
         },
         'postfix_unary_operators': {
             'au carré': '^ 2',
@@ -180,7 +184,8 @@ MATH_WORDS = {
     'GER': {
         'prefix_unary_operators': {
             'Quadratwurzel von': 'sqrt',
-            'Wurzel von': 'sqrt'
+            'Wurzel von': 'sqrt',
+            'Logarithmus von': 'log'
         },
         'postfix_unary_operators': {
             'quadriert': '^ 2',
@@ -239,7 +244,8 @@ MATH_WORDS = {
     },
     'GRE': {
         'prefix_unary_operators': {
-            'τετραγωνική ρίζα του': 'sqrt'
+            'τετραγωνική ρίζα του': 'sqrt',
+            'λογάριθμος του': 'log'
         },
         'postfix_unary_operators': {
             'στο τετράγωνο': '^ 2',
@@ -295,7 +301,8 @@ MATH_WORDS = {
     },
     'ITA': {
         'prefix_unary_operators': {
-            'radice quadrata di': 'sqrt'
+            'radice quadrata di': 'sqrt',
+            'logaritmo di': 'log'
         },
         'postfix_unary_operators': {
             'al quadrato': '^ 2',
@@ -350,7 +357,8 @@ MATH_WORDS = {
     },
     'MAR': {
         'prefix_unary_operators': {
-            'वर्गमूल': 'sqrt'
+            'वर्गमूल': 'sqrt',
+            'लॉगरिथम': 'log'
         },
         'postfix_unary_operators': {
             'वर्ग': '^ 2',
@@ -407,7 +415,8 @@ MATH_WORDS = {
     'RUS': {
         'prefix_unary_operators': {
             'квадратный корень из': 'sqrt',
-            'корень из': 'sqrt'
+            'корень из': 'sqrt',
+            'логарифм': 'log'
         },
         'postfix_unary_operators': {
             'в квадрате': '^ 2',
@@ -469,7 +478,8 @@ MATH_WORDS = {
     },
     'POR': {
         'prefix_unary_operators': {
-            'raiz quadrada de': 'sqrt'
+            'raiz quadrada de': 'sqrt',
+            'logaritmo de': 'log'
         },
         'postfix_unary_operators': {
             'ao quadrado': '^ 2',
@@ -524,7 +534,8 @@ MATH_WORDS = {
     'UKR': {
         'prefix_unary_operators': {
             'квадратний корінь з': 'sqrt',
-            'корінь з': 'sqrt'
+            'корінь з': 'sqrt',
+            'логарифм': 'log'
         },
         'postfix_unary_operators': {
             'у квадраті': '^ 2',
@@ -586,7 +597,8 @@ MATH_WORDS = {
     },
     'ESP': {
         'prefix_unary_operators': {
-            'raiz cuadrada de': 'sqrt'
+            'raiz cuadrada de': 'sqrt',
+            'logaritmo de': 'log'
         },
         'postfix_unary_operators': {
             'al cuadrado': '^ 2',
@@ -641,7 +653,8 @@ MATH_WORDS = {
     },
     'THA': {
         'prefix_unary_operators': {
-            'สแควรูท': 'sqrt'
+            'สแควรูท': 'sqrt',
+            'ลอการิทึม': 'log'
         },
         'postfix_unary_operators': {
             'ยกกำลังสอง': '^ 2',
@@ -698,7 +711,8 @@ MATH_WORDS = {
         'prefix_unary_operators': {
             '平方根': 'sqrt',
             '开方': 'sqrt',
-            '负': 'neg'
+            '负': 'neg',
+            '对数': 'log'
         },
         'postfix_unary_operators': {
             '平方': '^ 2',
