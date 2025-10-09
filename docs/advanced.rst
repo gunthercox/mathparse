@@ -64,6 +64,9 @@ mathparse supports unary functions that operate on a single value:
    * - log
      - Base-10 logarithm
      - ``mathparse.parse('log 100')`` → 2.0
+   * - neg
+     - Negative (unary minus)
+     - ``mathparse.parse('negative five', language='ENG')`` → -5
 
 **Examples:**
 
