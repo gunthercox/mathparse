@@ -15,6 +15,9 @@ The following languages are supported with their ISO 639-2 language codes:
    * - Code
      - Language
      - Example
+   * - CHI
+     - Simplified Chinese
+     - ``'五十 乘 二十 加 十'``
    * - DUT
      - Dutch
      - ``'vijftig maal twintig plus tien'``
@@ -273,6 +276,41 @@ Thai (THA)
     mathparse.parse('สี่ ยกกำลังสอง', language='THA')
     >>> 16
 
+Simplified Chinese (CHI)
+++++++++++++++++++++++++
+
+.. code-block:: python
+
+    # Basic arithmetic using Chinese characters
+    mathparse.parse('五 加 三', language='CHI')
+    >>> 8
+
+    # Multiplication
+    mathparse.parse('六 乘 九', language='CHI')
+    >>> 54
+
+    # Using alternative number representations
+    mathparse.parse('五十 加上 二十', language='CHI')
+    >>> 70
+
+    # Large numbers with scales
+    mathparse.parse('三 百 加 五十', language='CHI')
+    >>> 350
+
+    mathparse.parse('两 千 五 百', language='CHI')
+    >>> 2500
+
+    # Powers and roots
+    mathparse.parse('四 平方', language='CHI')
+    >>> 16
+
+    mathparse.parse('平方根 十六', language='CHI')
+    >>> 4.0
+
+    # Negative numbers
+    mathparse.parse('负 五 加 十', language='CHI')
+    >>> 5
+
 Common Operators by Language
 ----------------------------
 
@@ -298,6 +336,9 @@ English Operators
    * - Division
      - divided by
      - ``'twenty divided by four'``
+   * - Decimal Point
+     - point
+     - ``'five point two'``
    * - Power
      - to the power of
      - ``'two to the power of three'``
@@ -310,6 +351,9 @@ English Operators
    * - Square Root
      - square root of
      - ``'square root of nine'``
+   * - Negative
+     - negative
+     - ``'negative five'``
 
 French Operators
 ++++++++++++++++
@@ -333,6 +377,9 @@ French Operators
    * - Division
      - divisé par
      - ``'vingt divisé par quatre'``
+   * - Decimal Point
+     - virgule
+     - ``'cinq virgule deux'``
    * - Power
      - à la puissance
      - ``'deux à la puissance trois'``

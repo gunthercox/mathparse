@@ -115,9 +115,50 @@ The mathparse library converts infix expressions to postfix using the `Shunting-
    result = evaluate_postfix(postfix)       # 11
 
 The conversion process respects operator precedence:
-- Higher precedence: ``^`` (exponentiation), ``*``, ``/`` 
-- Lower precedence: ``+``, ``-``
+- Highest precedence: ``.`` (decimal point)
+- Higher precedence: ``^`` (exponentiation)
+- Medium precedence: ``*``, ``/`` (multiplication, division)
+- Lower precedence: ``+``, ``-`` (addition, subtraction)
 - Parentheses override natural precedence
+
+Decimal Point Operator
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The decimal point (``.``) is treated as a special binary operator with the highest precedence.
+It combines an integer part and a fractional part to create a decimal number.
+
+**How it works:**
+
+.. code-block:: python
+
+   # "53 . 4" is evaluated as: 53 + (4 / 10^1) = 53.4
+   result = mathparse.parse('53 . 4')
+   # Returns: 53.4
+
+   # "10 . 25" is evaluated as: 10 + (25 / 10^2) = 10.25
+   result = mathparse.parse('10 . 25')
+   # Returns: 10.25
+
+**Postfix evaluation:**
+
+.. code-block:: text
+
+   Expression: 53 . 4
+   Postfix: [53, 4, '.']
+
+   Evaluation:
+   Token: 53    Stack: [53]
+   Token: 4     Stack: [53, 4]
+   Token: .     Stack: [53.4]      (combines 53 and 4 into 53.4)
+   Result: 53.4
+
+The decimal operator has the highest precedence to ensure it binds tightly before any other operations:
+
+.. code-block:: python
+
+   # "5 . 2 + 3" is parsed as "(5.2) + 3", not "5 . (2 + 3)"
+   result = mathparse.parse('5 . 2 + 3')
+   # Returns: 8.2
 
 
 Security: Avoiding eval() Vulnerabilities  

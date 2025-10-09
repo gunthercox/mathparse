@@ -31,11 +31,11 @@ This is the primary function for parsing mathematical expressions. It accepts bo
 .. code-block:: python
 
     from mathparse import mathparse
-    
+
     # Numeric expression
     result = mathparse.parse('2 + 3 * 4')
     # Returns: 14
-    
+
     # Word-based expression
     result = mathparse.parse('five times six plus ten', language='ENG')
     # Returns: 40
@@ -120,7 +120,7 @@ Returns all mathematical words for a specific language.
 .. code-block:: python
 
     from mathparse.mathwords import words_for_language
-    
+
     english_words = words_for_language('ENG')
     # Returns: ['plus', 'minus', 'times', 'one', 'two', ...]
 
@@ -179,11 +179,12 @@ Unary Functions in Utils
 .. py:data:: mathparse.mathwords.UNARY_FUNCTIONS
 
    Dictionary of available unary mathematical functions.
-   
+
    Available functions:
-   
+
    * ``sqrt``: Square root function
    * ``log``: Base-10 logarithm function
+   * ``neg``: Negative (unary minus) function
 
 **Example:**
 
@@ -191,9 +192,12 @@ Unary Functions in Utils
 
     result = mathparse.parse('sqrt 16')
     # Returns: 4.0
-    
+
     result = mathparse.parse('log 100')
     # Returns: 2.0
+
+    result = mathparse.parse('negative five plus ten', language='ENG')
+    # Returns: 5
 
 Binary Operators
 ~~~~~~~~~~~~~~~~
@@ -201,8 +205,11 @@ Binary Operators
 .. py:data:: mathparse.mathwords.BINARY_OPERATORS
 
    Set of supported binary mathematical operators.
-   
-   Includes: ``{'^', '*', '/', '+', '-'}``
+
+   Includes: ``{'^', '*', '/', '+', '-', '.'}``
+
+   The decimal point (``'.'``) operator combines integer and fractional parts to create decimal numbers.
+   For example, in the expression ``53 . 4``, the decimal operator combines 53 and 4 to produce 53.4.
 
 Exceptions
 ----------
@@ -221,7 +228,7 @@ Exceptions
 
     from mathparse import mathparse
     from mathparse.mathwords import InvalidLanguageCodeException
-    
+
     try:
         result = mathparse.parse('five plus three', language='INVALID')
     except InvalidLanguageCodeException as e:
@@ -233,5 +240,5 @@ Language Codes
 .. py:data:: mathparse.mathwords.LANGUAGE_CODES
 
    List of supported ISO 639-2 language codes.
-   
-   Currently supported: ``['DUT', 'ENG', 'ESP', 'FRE', 'GER', 'GRE', 'ITA', 'MAR', 'POR', 'RUS', 'THA', 'UKR']``
+
+   Currently supported: ``['CHI', 'DUT', 'ENG', 'ESP', 'FRE', 'GER', 'GRE', 'ITA', 'MAR', 'POR', 'RUS', 'THA', 'UKR']``

@@ -275,6 +275,90 @@ Word-Based Function Examples
     result = mathparse.parse('three squared times two', language='ENG')
     print(result)  # 18
 
+Decimal Numbers
+---------------
+
+Word-Based Decimal Numbers
+++++++++++++++++++++++++++
+
+mathparse supports parsing decimal numbers expressed in words using the word "point" (or equivalent in other languages).
+The decimal point is treated as a binary operator that combines the integer and fractional parts.
+
+English Decimal Examples
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+.. code-block:: python
+
+    from mathparse import mathparse
+
+    # Simple decimal numbers
+    result = mathparse.parse('five point two', language='ENG')
+    print(result)  # 5.2
+
+    result = mathparse.parse('ten point twenty five', language='ENG')
+    print(result)  # 10.25
+
+    result = mathparse.parse('fifty three point four', language='ENG')
+    print(result)  # 53.4
+
+    # Decimal numbers in expressions
+    result = mathparse.parse('five point two plus three', language='ENG')
+    print(result)  # 8.2
+
+    result = mathparse.parse('fifty three point four times seven', language='ENG')
+    print(result)  # 373.8
+
+    result = mathparse.parse('three point five plus two point one', language='ENG')
+    print(result)  # 5.6
+
+    result = mathparse.parse('twenty one point six divided by four', language='ENG')
+    print(result)  # 5.4
+
+French Decimal Examples
+~~~~~~~~~~~~~~~~~~~~~~~
+
+In French, the word "virgule" (comma) is used for decimal points:
+
+.. code-block:: python
+
+    # French decimal numbers
+    result = mathparse.parse('cinq virgule deux', language='FRE')
+    print(result)  # 5.2
+
+    result = mathparse.parse('dix virgule vingt cinq', language='FRE')
+    print(result)  # 10.25
+
+Spanish Decimal Examples
+~~~~~~~~~~~~~~~~~~~~~~~~
+
+In Spanish, the word "punto" is used for decimal points:
+
+.. code-block:: python
+
+    # Spanish decimal numbers
+    result = mathparse.parse('cinco punto dos', language='ESP')
+    print(result)  # 5.2
+
+    result = mathparse.parse('diez punto veinticinco', language='ESP')
+    print(result)  # 10.25
+
+Numeric Decimal Support
++++++++++++++++++++++++
+
+mathparse also supports standard numeric decimal notation:
+
+.. code-block:: python
+
+    # Numeric decimals
+    result = mathparse.parse('5.2')
+    print(result)  # 5.2
+
+    result = mathparse.parse('53.4 * 7')
+    print(result)  # 373.8
+
+    result = mathparse.parse('3.5 + 2.1')
+    print(result)  # 5.6
+
 Practical Use Cases
 -------------------
 
@@ -324,10 +408,10 @@ Natural Language Processing
         try:
             # Extract the mathematical expression
             expression = mathparse.extract_expression(sentence, language)
-            
+
             # Parse and calculate
             result = mathparse.parse(expression, language=language)
-            
+
             return {
                 'original': sentence,
                 'extracted': expression,
@@ -359,18 +443,18 @@ Unit Conversion Helper
 
     def convert_units():
         """Examples of using mathparse for unit conversions."""
-        
+
         # Temperature conversion: Celsius to Fahrenheit
         # F = C * 9/5 + 32
         celsius = 25
         fahrenheit = mathparse.parse(f'{celsius} * 9 / 5 + 32')
         print(f"{celsius}°C = {fahrenheit}°F")  # 25°C = 77.0°F
-        
+
         # Area of circle: π * r²
         radius = 5
         area = mathparse.parse(f'pi * {radius} * {radius}')
         print(f"Circle area (r={radius}): {area}")  # Circle area (r=5): 78.54225
-        
+
         # Compound interest: P * (1 + r)^t
         principal = 1000
         rate = 0.05  # 5%
@@ -392,13 +476,13 @@ Educational Applications
             ("What is deux plus trois?", 'FRE', 5),  # French
             ("Calculate fünf mal sechs", 'GER', 30),  # German
         ]
-        
+
         for question, lang, expected in questions:
             try:
                 # Extract and solve
                 expression = mathparse.extract_expression(question, lang)
                 result = mathparse.parse(expression, language=lang)
-                
+
                 correct = "✓" if result == expected else "✗"
                 print(f"{correct} {question}")
                 print(f"   Expression: {expression}")
@@ -456,13 +540,13 @@ Robust Error Handling
         """Safely parse expressions with comprehensive error handling."""
         try:
             result = mathparse.parse(expression, language=language)
-            
+
             # Check for division by zero
             if result == 'undefined':
                 return {'success': False, 'error': 'Division by zero', 'result': default}
-            
+
             return {'success': True, 'result': result}
-            
+
         except InvalidLanguageCodeException:
             return {'success': False, 'error': 'Invalid language code', 'result': default}
         except PostfixTokenEvaluationException as e:
@@ -492,20 +576,22 @@ Benchmarking Example
     from mathparse import mathparse
 
     def benchmark_parsing():
-        """Compare performance of numeric vs word-based parsing."""
-        
+        """
+        Compare performance of numeric vs word-based parsing.
+        """
+
         # Numeric expressions (faster)
         start_time = time.time()
         for i in range(1000):
             result = mathparse.parse('2 + 3 * 4')
         numeric_time = time.time() - start_time
-        
+
         # Word-based expressions (slower due to text processing)
         start_time = time.time()
         for i in range(1000):
             result = mathparse.parse('two plus three times four', language='ENG')
         word_time = time.time() - start_time
-        
+
         print(f"Numeric parsing: {numeric_time:.4f}s for 1000 operations")
         print(f"Word-based parsing: {word_time:.4f}s for 1000 operations")
         print(f"Word-based is {word_time/numeric_time:.1f}x slower")
@@ -541,14 +627,14 @@ Optimization Tips
     def batch_parse(expressions, language=None):
         """Parse multiple expressions efficiently."""
         results = []
-        
+
         # Pre-validate language if provided
         if language:
             try:
                 word_groups_for_language(language)
             except InvalidLanguageCodeException:
                 return [{'error': 'Invalid language code'}] * len(expressions)
-        
+
         # Process all expressions
         for expr in expressions:
             try:
@@ -556,7 +642,7 @@ Optimization Tips
                 results.append({'success': True, 'result': result})
             except Exception as e:
                 results.append({'success': False, 'error': str(e)})
-        
+
         return results
 
     # Example usage

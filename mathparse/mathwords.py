@@ -4,7 +4,7 @@ Utility methods for getting math word terms.
 import math
 
 BINARY_OPERATORS = {
-    '^', '*', '/', '+', '-'
+    '^', '*', '/', '+', '-', '.'
 }
 
 MATH_WORDS = {
@@ -77,7 +77,8 @@ MATH_WORDS = {
             'divided by': '/',
             'minus': '-',
             'times': '*',
-            'to the power of': '^'
+            'to the power of': '^',
+            'point': '.'
         },
         'numbers': {
             'zero': 0,
@@ -132,7 +133,8 @@ MATH_WORDS = {
             'fois': '*',
             'équarri': '^ 2',
             'en cubes': '^ 3',
-            'à la puissance': '^'
+            'à la puissance': '^',
+            'virgule': '.'
         },
         'numbers': {
             'zéro': 0,
@@ -596,7 +598,8 @@ MATH_WORDS = {
             'menos': '-',
             'por': '*',
             'veces': '*',
-            'elevado al': '^'
+            'elevado al': '^',
+            'punto': '.'
         },
         'numbers': {
             'cero': 0,

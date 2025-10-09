@@ -403,6 +403,7 @@ def to_postfix(tokens: list) -> list:
     Convert a list of evaluatable tokens to postfix format.
     """
     precedence = {
+        '.': 5,
         '/': 4,
         '*': 4,
         '+': 3,
@@ -499,6 +500,17 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
                     total = 'undefined'
                 else:
                     total = Decimal(str(a)) / Decimal(str(b))
+            elif token == '.':
+                # Treat decimal points as a binary operator that combines the
+                # integer and fractional part of two numbers
+                # Example: 53 . 25 = 53.25
+                if b == 0:
+                    total = Decimal(a)
+                else:
+                    # Count the digits in b to determine the divisor
+                    digits = len(str(int(b)))
+                    divisor = 10 ** digits
+                    total = a + (b / divisor)
             else:
                 raise PostfixTokenEvaluationException(
                     'Unknown token "{}"'.format(token)
