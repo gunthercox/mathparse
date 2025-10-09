@@ -7,6 +7,8 @@ BINARY_OPERATORS = {
     '^', '*', '/', '+', '-', '.'
 }
 
+# Each key is an ISO 639-2 language code
+# https://www.loc.gov/standards/iso639-2/php/code_list.php
 MATH_WORDS = {
     'DUT': {
         'prefix_unary_operators': {
@@ -793,6 +795,870 @@ MATH_WORDS = {
             '百亿': 10000000000,
             '千亿': 100000000000,
             '万亿': 1000000000000
+        }
+    },
+    'JPN': {
+        'prefix_unary_operators': {
+            '平方根': 'sqrt',
+            'ルート': 'sqrt',
+            '負の': 'neg'
+        },
+        'postfix_unary_operators': {
+            '二乗': '^ 2',
+            '三乗': '^ 3',
+            'の二乗': '^ 2',
+            'の三乗': '^ 3'
+        },
+        'binary_operators': {
+            'たす': '+',
+            'プラス': '+',
+            'わる': '/',
+            '割る': '/',
+            'ひく': '-',
+            'マイナス': '-',
+            'かける': '*',
+            '掛ける': '*',
+            '乗': '^',
+            'の': '^'
+        },
+        'numbers': {
+            'ゼロ': 0, '零': 0,
+            '一': 1, 'いち': 1,
+            '二': 2, 'に': 2,
+            '三': 3, 'さん': 3,
+            '四': 4, 'し': 4, 'よん': 4,
+            '五': 5, 'ご': 5,
+            '六': 6, 'ろく': 6,
+            '七': 7, 'しち': 7, 'なな': 7,
+            '八': 8, 'はち': 8,
+            '九': 9, 'きゅう': 9, 'く': 9,
+            '十': 10, 'じゅう': 10,
+            '十一': 11, 'じゅういち': 11,
+            '十二': 12, 'じゅうに': 12,
+            '十三': 13, 'じゅうさん': 13,
+            '十四': 14, 'じゅうし': 14,
+            '十五': 15, 'じゅうご': 15,
+            '十六': 16, 'じゅうろく': 16,
+            '十七': 17, 'じゅうしち': 17,
+            '十八': 18, 'じゅうはち': 18,
+            '十九': 19, 'じゅうきゅう': 19,
+            '二十': 20, 'にじゅう': 20,
+            '三十': 30, 'さんじゅう': 30,
+            '四十': 40, 'よんじゅう': 40,
+            '五十': 50, 'ごじゅう': 50,
+            '六十': 60, 'ろくじゅう': 60,
+            '七十': 70, 'ななじゅう': 70,
+            '八十': 80, 'はちじゅう': 80,
+            '九十': 90, 'きゅうじゅう': 90
+        },
+        'scales': {
+            '百': 100, 'ひゃく': 100,
+            '千': 1000, 'せん': 1000,
+            '万': 10000, 'まん': 10000,
+            '十万': 100000,
+            '百万': 1000000,
+            '千万': 10000000,
+            '億': 100000000, 'おく': 100000000,
+            '兆': 1000000000000, 'ちょう': 1000000000000
+        }
+    },
+    'KOR': {
+        'prefix_unary_operators': {
+            '제곱근': 'sqrt',
+            '루트': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            '제곱': '^ 2',
+            '세제곱': '^ 3'
+        },
+        'binary_operators': {
+            '더하기': '+',
+            '플러스': '+',
+            '나누기': '/',
+            '빼기': '-',
+            '마이너스': '-',
+            '곱하기': '*',
+            '곱': '*',
+            '의': '^',
+            '승': '^'
+        },
+        'numbers': {
+            '영': 0, '공': 0,
+            '일': 1, '하나': 1,
+            '이': 2, '둘': 2,
+            '삼': 3, '셋': 3,
+            '사': 4, '넷': 4,
+            '오': 5, '다섯': 5,
+            '육': 6, '여섯': 6,
+            '칠': 7, '일곱': 7,
+            '팔': 8, '여덟': 8,
+            '구': 9, '아홉': 9,
+            '십': 10, '열': 10,
+            '십일': 11,
+            '십이': 12,
+            '십삼': 13,
+            '십사': 14,
+            '십오': 15,
+            '십육': 16,
+            '십칠': 17,
+            '십팔': 18,
+            '십구': 19,
+            '이십': 20, '스물': 20,
+            '삼십': 30, '서른': 30,
+            '사십': 40, '마흔': 40,
+            '오십': 50, '쉰': 50,
+            '육십': 60, '예순': 60,
+            '칠십': 70, '일흔': 70,
+            '팔십': 80, '여든': 80,
+            '구십': 90, '아흔': 90
+        },
+        'scales': {
+            '백': 100,
+            '천': 1000,
+            '만': 10000,
+            '십만': 100000,
+            '백만': 1000000,
+            '천만': 10000000,
+            '억': 100000000,
+            '조': 1000000000000
+        }
+    },
+    'VIE': {
+        'prefix_unary_operators': {
+            'căn bậc hai': 'sqrt',
+            'căn': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'bình phương': '^ 2',
+            'lập phương': '^ 3'
+        },
+        'binary_operators': {
+            'cộng': '+',
+            'thêm': '+',
+            'chia': '/',
+            'chia cho': '/',
+            'trừ': '-',
+            'bớt': '-',
+            'nhân': '*',
+            'lũy thừa': '^'
+        },
+        'numbers': {
+            'không': 0,
+            'một': 1, 'mốt': 1,
+            'hai': 2,
+            'ba': 3,
+            'bốn': 4, 'tư': 4,
+            'năm': 5, 'lăm': 5,
+            'sáu': 6,
+            'bảy': 7, 'bẩy': 7,
+            'tám': 8,
+            'chín': 9,
+            'mười': 10,
+            'mười một': 11,
+            'mười hai': 12,
+            'mười ba': 13,
+            'mười bốn': 14,
+            'mười lăm': 15,
+            'mười sáu': 16,
+            'mười bảy': 17,
+            'mười tám': 18,
+            'mười chín': 19,
+            'hai mươi': 20,
+            'ba mươi': 30,
+            'bốn mươi': 40,
+            'năm mươi': 50,
+            'sáu mươi': 60,
+            'bảy mươi': 70,
+            'tám mươi': 80,
+            'chín mươi': 90
+        },
+        'scales': {
+            'trăm': 100,
+            'nghìn': 1000, 'ngàn': 1000,
+            'triệu': 1000000,
+            'tỷ': 1000000000,
+            'nghìn tỷ': 1000000000000
+        }
+    },
+    'HIN': {
+        'prefix_unary_operators': {
+            'वर्गमूल': 'sqrt',
+            'ऋणात्मक': 'neg'
+        },
+        'postfix_unary_operators': {
+            'वर्ग': '^ 2',
+            'घन': '^ 3'
+        },
+        'binary_operators': {
+            'जोड़': '+',
+            'प्लस': '+',
+            'भाग': '/',
+            'विभाजित': '/',
+            'घटा': '-',
+            'माइनस': '-',
+            'गुणा': '*',
+            'घात': '^'
+        },
+        'numbers': {
+            'शून्य': 0,
+            'एक': 1,
+            'दो': 2,
+            'तीन': 3,
+            'चार': 4,
+            'पाँच': 5, 'पांच': 5,
+            'छह': 6, 'छः': 6,
+            'सात': 7,
+            'आठ': 8,
+            'नौ': 9,
+            'दस': 10,
+            'ग्यारह': 11,
+            'बारह': 12,
+            'तेरह': 13,
+            'चौदह': 14,
+            'पंद्रह': 15,
+            'सोलह': 16,
+            'सत्रह': 17,
+            'अठारह': 18,
+            'उन्नीस': 19,
+            'बीस': 20,
+            'तीस': 30,
+            'चालीस': 40,
+            'पचास': 50,
+            'साठ': 60,
+            'सत्तर': 70,
+            'अस्सी': 80,
+            'नब्बे': 90
+        },
+        'scales': {
+            'सौ': 100,
+            'हजार': 1000,
+            'लाख': 100000,
+            'दस लाख': 1000000,
+            'करोड़': 10000000,
+            'अरब': 1000000000,
+            'खरब': 100000000000
+        }
+    },
+    'ARA': {
+        'prefix_unary_operators': {
+            'الجذر التربيعي': 'sqrt',
+            'جذر': 'sqrt',
+            'سالب': 'neg'
+        },
+        'postfix_unary_operators': {
+            'تربيع': '^ 2',
+            'مكعب': '^ 3',
+            'مربع': '^ 2'
+        },
+        'binary_operators': {
+            'زائد': '+',
+            'جمع': '+',
+            'مقسوم على': '/',
+            'قسمة': '/',
+            'ناقص': '-',
+            'طرح': '-',
+            'ضرب': '*',
+            'في': '*',
+            'أس': '^',
+            'قوة': '^'
+        },
+        'numbers': {
+            'صفر': 0,
+            'واحد': 1,
+            'اثنان': 2, 'اثنين': 2,
+            'ثلاثة': 3,
+            'أربعة': 4,
+            'خمسة': 5,
+            'ستة': 6,
+            'سبعة': 7,
+            'ثمانية': 8,
+            'تسعة': 9,
+            'عشرة': 10,
+            'أحد عشر': 11,
+            'اثنا عشر': 12,
+            'ثلاثة عشر': 13,
+            'أربعة عشر': 14,
+            'خمسة عشر': 15,
+            'ستة عشر': 16,
+            'سبعة عشر': 17,
+            'ثمانية عشر': 18,
+            'تسعة عشر': 19,
+            'عشرون': 20,
+            'ثلاثون': 30,
+            'أربعون': 40,
+            'خمسون': 50,
+            'ستون': 60,
+            'سبعون': 70,
+            'ثمانون': 80,
+            'تسعون': 90
+        },
+        'scales': {
+            'مئة': 100, 'مائة': 100,
+            'ألف': 1000,
+            'مليون': 1000000,
+            'مليار': 1000000000,
+            'تريليون': 1000000000000
+        }
+    },
+    'HEB': {
+        'prefix_unary_operators': {
+            'שורש ריבועי': 'sqrt',
+            'שורש': 'sqrt',
+            'שלילי': 'neg'
+        },
+        'postfix_unary_operators': {
+            'בריבוע': '^ 2',
+            'בחזקת שלוש': '^ 3',
+            'בשלישית': '^ 3'
+        },
+        'binary_operators': {
+            'פלוס': '+',
+            'ועוד': '+',
+            'חלקי': '/',
+            'חילוק': '/',
+            'מינוס': '-',
+            'פחות': '-',
+            'כפול': '*',
+            'פעמים': '*',
+            'בחזקת': '^',
+            'חזקה': '^'
+        },
+        'numbers': {
+            'אפס': 0,
+            'אחד': 1, 'אחת': 1,
+            'שניים': 2, 'שתיים': 2,
+            'שלושה': 3, 'שלוש': 3,
+            'אַרבעה': 4, 'ארבע': 4,
+            'חמישה': 5, 'חמש': 5,
+            'שישה': 6, 'שש': 6,
+            'שבעה': 7, 'שבע': 7,
+            'שמונה': 8, 'שמונה': 8,
+            'תשעה': 9, 'תשע': 9,
+            'עשרה': 10, 'עשר': 10,
+            'אחד עשר': 11,
+            'שנים עשר': 12,
+            'שלושה עשר': 13,
+            'ארבעה עשר': 14,
+            'חמישה עשר': 15,
+            'שישה עשר': 16,
+            'שבעה עשר': 17,
+            'שמונה עשר': 18,
+            'תשעה עשר': 19,
+            'עשרים': 20,
+            'שלושים': 30,
+            'ארבעים': 40,
+            'חמישים': 50,
+            'שישים': 60,
+            'שבעים': 70,
+            'שמונים': 80,
+            'תשעים': 90
+        },
+        'scales': {
+            'מאה': 100,
+            'אלף': 1000,
+            'מיליון': 1000000,
+            'מיליארד': 1000000000,
+            'טריליון': 1000000000000
+        }
+    },
+    'TUR': {
+        'prefix_unary_operators': {
+            'karekök': 'sqrt',
+            'negatif': 'neg'
+        },
+        'postfix_unary_operators': {
+            'kare': '^ 2',
+            'küp': '^ 3'
+        },
+        'binary_operators': {
+            'artı': '+',
+            'toplama': '+',
+            'bölü': '/',
+            'bölme': '/',
+            'eksi': '-',
+            'çıkarma': '-',
+            'çarpı': '*',
+            'çarpma': '*',
+            'üzeri': '^',
+            'kuvvet': '^'
+        },
+        'numbers': {
+            'sıfır': 0,
+            'bir': 1,
+            'iki': 2,
+            'üç': 3,
+            'dört': 4,
+            'beş': 5,
+            'altı': 6,
+            'yedi': 7,
+            'sekiz': 8,
+            'dokuz': 9,
+            'on': 10,
+            'on bir': 11,
+            'on iki': 12,
+            'on üç': 13,
+            'on dört': 14,
+            'on beş': 15,
+            'on altı': 16,
+            'on yedi': 17,
+            'on sekiz': 18,
+            'on dokuz': 19,
+            'yirmi': 20,
+            'otuz': 30,
+            'kırk': 40,
+            'elli': 50,
+            'altmış': 60,
+            'yetmiş': 70,
+            'seksen': 80,
+            'doksan': 90
+        },
+        'scales': {
+            'yüz': 100,
+            'bin': 1000,
+            'milyon': 1000000,
+            'milyar': 1000000000,
+            'trilyon': 1000000000000
+        }
+    },
+    'SWE': {
+        'prefix_unary_operators': {
+            'kvadratroten av': 'sqrt',
+            'roten ur': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'i kvadrat': '^ 2',
+            'i kubik': '^ 3'
+        },
+        'binary_operators': {
+            'plus': '+',
+            'delat med': '/',
+            'minus': '-',
+            'gånger': '*',
+            'multiplicerat med': '*',
+            'upphöjt till': '^'
+        },
+        'numbers': {
+            'noll': 0,
+            'ett': 1, 'en': 1,
+            'två': 2,
+            'tre': 3,
+            'fyra': 4,
+            'fem': 5,
+            'sex': 6,
+            'sju': 7,
+            'åtta': 8,
+            'nio': 9,
+            'tio': 10,
+            'elva': 11,
+            'tolv': 12,
+            'tretton': 13,
+            'fjorton': 14,
+            'femton': 15,
+            'sexton': 16,
+            'sjutton': 17,
+            'arton': 18,
+            'nitton': 19,
+            'tjugo': 20,
+            'trettio': 30,
+            'fyrtio': 40,
+            'femtio': 50,
+            'sextio': 60,
+            'sjuttio': 70,
+            'åttio': 80,
+            'nittio': 90
+        },
+        'scales': {
+            'hundra': 100,
+            'tusen': 1000,
+            'miljon': 1000000,
+            'miljard': 1000000000,
+            'biljon': 1000000000000
+        }
+    },
+    'NOR': {
+        'prefix_unary_operators': {
+            'kvadratrot av': 'sqrt',
+            'rot av': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'i andre': '^ 2',
+            'i tredje': '^ 3'
+        },
+        'binary_operators': {
+            'pluss': '+',
+            'delt på': '/',
+            'minus': '-',
+            'ganger': '*',
+            'multiplisert med': '*',
+            'opphøyd i': '^'
+        },
+        'numbers': {
+            'null': 0,
+            'en': 1, 'ett': 1,
+            'to': 2,
+            'tre': 3,
+            'fire': 4,
+            'fem': 5,
+            'seks': 6,
+            'sju': 7, 'syv': 7,
+            'åtte': 8,
+            'ni': 9,
+            'ti': 10,
+            'elleve': 11,
+            'tolv': 12,
+            'tretten': 13,
+            'fjorten': 14,
+            'femten': 15,
+            'seksten': 16,
+            'sytten': 17,
+            'atten': 18,
+            'nitten': 19,
+            'tjue': 20,
+            'tretti': 30,
+            'førti': 40,
+            'femti': 50,
+            'seksti': 60,
+            'sytti': 70,
+            'åtti': 80,
+            'nitti': 90
+        },
+        'scales': {
+            'hundre': 100,
+            'tusen': 1000,
+            'million': 1000000,
+            'milliard': 1000000000,
+            'billion': 1000000000000
+        }
+    },
+    'DAN': {
+        'prefix_unary_operators': {
+            'kvadratrod af': 'sqrt',
+            'rod af': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'i anden': '^ 2',
+            'i tredje': '^ 3'
+        },
+        'binary_operators': {
+            'plus': '+',
+            'divideret med': '/',
+            'minus': '-',
+            'gange': '*',
+            'multipliceret med': '*',
+            'opløftet i': '^'
+        },
+        'numbers': {
+            'nul': 0,
+            'en': 1, 'et': 1,
+            'to': 2,
+            'tre': 3,
+            'fire': 4,
+            'fem': 5,
+            'seks': 6,
+            'syv': 7,
+            'otte': 8,
+            'ni': 9,
+            'ti': 10,
+            'elleve': 11,
+            'tolv': 12,
+            'tretten': 13,
+            'fjorten': 14,
+            'femten': 15,
+            'seksten': 16,
+            'sytten': 17,
+            'atten': 18,
+            'nitten': 19,
+            'tyve': 20,
+            'tredive': 30,
+            'fyrre': 40, 'fyrretyve': 40,
+            'halvtreds': 50,
+            'tres': 60,
+            'halvfjerds': 70,
+            'firs': 80,
+            'halvfems': 90
+        },
+        'scales': {
+            'hundrede': 100,
+            'tusind': 1000,
+            'million': 1000000,
+            'milliard': 1000000000,
+            'billion': 1000000000000
+        }
+    },
+    'FIN': {
+        'prefix_unary_operators': {
+            'neliöjuuri': 'sqrt',
+            'juuri': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'toiseen': '^ 2',
+            'kolmanteen': '^ 3'
+        },
+        'binary_operators': {
+            'plus': '+',
+            'jaettuna': '/',
+            'miinus': '-',
+            'kertaa': '*',
+            'kerrottuna': '*',
+            'potenssiin': '^'
+        },
+        'numbers': {
+            'nolla': 0,
+            'yksi': 1,
+            'kaksi': 2,
+            'kolme': 3,
+            'neljä': 4,
+            'viisi': 5,
+            'kuusi': 6,
+            'seitsemän': 7,
+            'kahdeksan': 8,
+            'yhdeksän': 9,
+            'kymmenen': 10,
+            'yksitoista': 11,
+            'kaksitoista': 12,
+            'kolmetoista': 13,
+            'neljätoista': 14,
+            'viisitoista': 15,
+            'kuusitoista': 16,
+            'seitsemäntoista': 17,
+            'kahdeksantoista': 18,
+            'yhdeksäntoista': 19,
+            'kaksikymmentä': 20,
+            'kolmekymmentä': 30,
+            'neljäkymmentä': 40,
+            'viisikymmentä': 50,
+            'kuusikymmentä': 60,
+            'seitsemänkymmentä': 70,
+            'kahdeksankymmentä': 80,
+            'yhdeksänkymmentä': 90
+        },
+        'scales': {
+            'sata': 100,
+            'tuhat': 1000,
+            'miljoona': 1000000,
+            'miljardi': 1000000000,
+            'biljoona': 1000000000000
+        }
+    },
+    'POL': {
+        'prefix_unary_operators': {
+            'pierwiastek kwadratowy z': 'sqrt',
+            'pierwiastek z': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'do kwadratu': '^ 2',
+            'do sześcianu': '^ 3'
+        },
+        'binary_operators': {
+            'plus': '+',
+            'podzielone przez': '/',
+            'dzielone przez': '/',
+            'minus': '-',
+            'razy': '*',
+            'pomnożone przez': '*',
+            'do potęgi': '^'
+        },
+        'numbers': {
+            'zero': 0,
+            'jeden': 1, 'jedna': 1,
+            'dwa': 2, 'dwie': 2,
+            'trzy': 3,
+            'cztery': 4,
+            'pięć': 5,
+            'sześć': 6,
+            'siedem': 7,
+            'osiem': 8,
+            'dziewięć': 9,
+            'dziesięć': 10,
+            'jedenaście': 11,
+            'dwanaście': 12,
+            'trzynaście': 13,
+            'czternaście': 14,
+            'piętnaście': 15,
+            'szesnaście': 16,
+            'siedemnaście': 17,
+            'osiemnaście': 18,
+            'dziewiętnaście': 19,
+            'dwadzieścia': 20,
+            'trzydzieści': 30,
+            'czterdzieści': 40,
+            'pięćdziesiąt': 50,
+            'sześćdziesiąt': 60,
+            'siedemdziesiąt': 70,
+            'osiemdziesiąt': 80,
+            'dziewięćdziesiąt': 90
+        },
+        'scales': {
+            'sto': 100,
+            'tysiąc': 1000,
+            'milion': 1000000,
+            'miliard': 1000000000,
+            'bilion': 1000000000000
+        }
+    },
+    'CZE': {
+        'prefix_unary_operators': {
+            'druhá odmocnina': 'sqrt',
+            'odmocnina': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'na druhou': '^ 2',
+            'na třetí': '^ 3'
+        },
+        'binary_operators': {
+            'plus': '+',
+            'děleno': '/',
+            'minus': '-',
+            'krát': '*',
+            'násobeno': '*',
+            'na': '^'
+        },
+        'numbers': {
+            'nula': 0,
+            'jeden': 1, 'jedna': 1, 'jedno': 1,
+            'dva': 2, 'dvě': 2,
+            'tři': 3,
+            'čtyři': 4,
+            'pět': 5,
+            'šest': 6,
+            'sedm': 7,
+            'osm': 8,
+            'devět': 9,
+            'deset': 10,
+            'jedenáct': 11,
+            'dvanáct': 12,
+            'třináct': 13,
+            'čtrnáct': 14,
+            'patnáct': 15,
+            'šestnáct': 16,
+            'sedmnáct': 17,
+            'osmnáct': 18,
+            'devatenáct': 19,
+            'dvacet': 20,
+            'třicet': 30,
+            'čtyřicet': 40,
+            'padesát': 50,
+            'šedesát': 60,
+            'sedmdesát': 70,
+            'osmdesát': 80,
+            'devadesát': 90
+        },
+        'scales': {
+            'sto': 100,
+            'tisíc': 1000,
+            'milion': 1000000,
+            'miliarda': 1000000000,
+            'bilion': 1000000000000
+        }
+    },
+    'HUN': {
+        'prefix_unary_operators': {
+            'négyzetgyök': 'sqrt',
+            'gyök': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'négyzet': '^ 2',
+            'köb': '^ 3'
+        },
+        'binary_operators': {
+            'plusz': '+',
+            'osztva': '/',
+            'mínusz': '-',
+            'szorozva': '*',
+            'szor': '*',
+            'hatványon': '^'
+        },
+        'numbers': {
+            'nulla': 0,
+            'egy': 1,
+            'kettő': 2, 'két': 2,
+            'három': 3,
+            'négy': 4,
+            'öt': 5,
+            'hat': 6,
+            'hét': 7,
+            'nyolc': 8,
+            'kilenc': 9,
+            'tíz': 10,
+            'tizenegy': 11,
+            'tizenkettő': 12,
+            'tizenhárom': 13,
+            'tizennégy': 14,
+            'tizenöt': 15,
+            'tizenhat': 16,
+            'tizenhét': 17,
+            'tizennyolc': 18,
+            'tizenkilenc': 19,
+            'húsz': 20,
+            'harminc': 30,
+            'negyven': 40,
+            'ötven': 50,
+            'hatvan': 60,
+            'hetven': 70,
+            'nyolcvan': 80,
+            'kilencven': 90
+        },
+        'scales': {
+            'száz': 100,
+            'ezer': 1000,
+            'millió': 1000000,
+            'milliárd': 1000000000,
+            'billió': 1000000000000
+        }
+    },
+    'RON': {
+        'prefix_unary_operators': {
+            'radical din': 'sqrt',
+            'rădăcină pătrată din': 'sqrt'
+        },
+        'postfix_unary_operators': {
+            'la pătrat': '^ 2',
+            'la cub': '^ 3'
+        },
+        'binary_operators': {
+            'plus': '+',
+            'împărțit la': '/',
+            'minus': '-',
+            'înmulțit cu': '*',
+            'ori': '*',
+            'la puterea': '^'
+        },
+        'numbers': {
+            'zero': 0,
+            'unu': 1, 'una': 1,
+            'doi': 2, 'două': 2,
+            'trei': 3,
+            'patru': 4,
+            'cinci': 5,
+            'șase': 6,
+            'șapte': 7,
+            'opt': 8,
+            'nouă': 9,
+            'zece': 10,
+            'unsprezece': 11,
+            'doisprezece': 12,
+            'treisprezece': 13,
+            'paisprezece': 14,
+            'cincisprezece': 15,
+            'șaisprezece': 16,
+            'șaptesprezece': 17,
+            'optsprezece': 18,
+            'nouăsprezece': 19,
+            'douăzeci': 20,
+            'treizeci': 30,
+            'patruzeci': 40,
+            'cincizeci': 50,
+            'șaizeci': 60,
+            'șaptezeci': 70,
+            'optzeci': 80,
+            'nouăzeci': 90
+        },
+        'scales': {
+            'sută': 100,
+            'mie': 1000,
+            'milion': 1000000,
+            'miliard': 1000000000,
+            'trilion': 1000000000000
         }
     }
 }
