@@ -119,3 +119,56 @@ class WordOperatorTestCase(TestCase):
         result = mathparse.parse('2 to the power of 3', language='ENG')
 
         self.assertEqual(result, 8)
+
+
+class WordBasedDecimalTestCase(TestCase):
+    """
+    Test cases for word-based decimal numbers.
+    For example: "fifty three point four" should be treated as 53.4
+    """
+
+    def test_word_decimal_with_multiplication(self):
+        """
+        Test: "Fifty three point four times seven" should equal 53.4 * 7
+        """
+        result = mathparse.parse(
+            'fifty three point four times seven', language='ENG'
+        )
+
+        self.assertEqual(result, 53.4 * 7)
+
+    def test_word_decimal_simple(self):
+        """
+        Test: "five point two" should equal 5.2
+        """
+        result = mathparse.parse('five point two', language='ENG')
+
+        self.assertEqual(result, 5.2)
+
+    def test_word_decimal_with_addition(self):
+        """
+        Test: "three point five plus two point one" should equal 5.6
+        """
+        result = mathparse.parse(
+            'three point five plus two point one', language='ENG'
+        )
+
+        self.assertEqual(result, 5.6)
+
+    def test_word_decimal_with_division(self):
+        """
+        Test: "twenty one point six divided by four" should equal 5.4
+        """
+        result = mathparse.parse(
+            'twenty one point six divided by four', language='ENG'
+        )
+
+        self.assertEqual(float(result), 5.4)
+
+    def test_word_decimal_multi_digit_fractional(self):
+        """
+        Test: "ten point twenty five" should equal 10.25
+        """
+        result = mathparse.parse('ten point twenty five', language='ENG')
+
+        self.assertEqual(result, 10.25)
