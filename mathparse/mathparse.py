@@ -400,13 +400,15 @@ def preprocess_unary_operators(tokens: list) -> list:
     * At the beginning of the expression
     * After an opening parenthesis '('
     * After a binary operator `(+, -, *, /, ^)`
+    * After a unary function `(sqrt, log, neg)`
     """
     if not tokens:
         return tokens
 
     processed_tokens = []
 
-    binary_operators = mathwords.BINARY_OPERATORS | {'('}
+    # A following minus sign should be treated as unary (negative)
+    unary_contexts = mathwords.BINARY_OPERATORS | {'('}
 
     for i, token in enumerate(tokens):
         if token == '-':
@@ -418,8 +420,9 @@ def preprocess_unary_operators(tokens: list) -> list:
                 is_unary_minus = True
             elif i > 0:
                 prev_token = tokens[i - 1]
-                # A unary minus after opening parenthesis or binary operators
-                if prev_token in binary_operators:
+                # A unary minus after opening parenthesis, binary operators,
+                # or unary functions
+                if prev_token in unary_contexts or is_unary(prev_token):
                     is_unary_minus = True
 
             if is_unary_minus:
@@ -539,14 +542,20 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
             elif token == '.':
                 # Treat decimal points as a binary operator that combines the
                 # integer and fractional part of two numbers
-                # Example: 53 . 25 = 53.25
+                # Example: 53 . 25 = 53.25, -3 . 5 = -3.5
                 if b == 0:
                     total = Decimal(a)
                 else:
                     # Count the digits in b to determine the divisor
                     digits = len(str(int(b)))
                     divisor = 10 ** digits
-                    total = a + (b / divisor)
+                    fractional_part = b / divisor
+                    # Handle negative numbers correctly: -3 . 5 should be -3.5,
+                    # not -2.5
+                    if a < 0:
+                        total = a - fractional_part
+                    else:
+                        total = a + fractional_part
             else:
                 raise PostfixTokenEvaluationException(
                     'Unknown token "{}"'.format(token)
@@ -612,8 +621,22 @@ def tokenize(string: str, language: str = None, escape: str = '___') -> list:
                 string = string.replace(spaced_phrase, phrase)
 
     # Binary operators must have space around them to be tokenized properly
+    # Special handling for minus sign: preserve leading negatives
     for operator in mathwords.BINARY_OPERATORS:
-        string = string.replace(operator, f' {operator} ')
+        if operator == '-':
+            # For minus sign, use a pattern that only spaces it when it's
+            # clearly a binary operator (after digits or closing parenthesis).
+            # This preserves leading negatives like "-3" and distinguishes
+            # between:
+            # - "What is -3 + 3" --> "-3 + 3" (minus is part of number)
+            # - "5 - 3" --> "5 - 3" (minus is binary operator, needs spacing)
+            # - "math - 4" --> "- 4" (minus after letters is not a binary
+            #   operator)
+            # Only add spaces around minus when preceded by a digit or closing
+            # parenthesis
+            string = re.sub(r'([\d)])\s*-\s*', r'\1 - ', string)
+        else:
+            string = string.replace(operator, f' {operator} ')
 
     # Parenthesis must have space around them to be tokenized properly
     string = string.replace('(', ' ( ')
@@ -752,11 +775,46 @@ def extract_expression(dirty_string: str, language: str) -> str:
     start_index = 0
     end_index = len(tokens)
 
-    for part in tokens:
+    # Find the start of the mathematical expression
+    # Skip over non-mathematical tokens AND isolated binary operators
+    for i, part in enumerate(tokens):
         if is_symbol(part) or is_word(part, language):
-            break
-        else:
-            start_index += 1
+            # A potential start was found, so check if it's a standalone binary
+            # operator. Binary operators (except '(') are only valid at the
+            # start if they are unary (such as a leading minus for a negative
+            # number)
+            if part in mathwords.BINARY_OPERATORS and part != '(':
+                # For a binary operator to be the start of an expression, it
+                # must be:
+                # 1. At the very beginning (position 0) - could be unary minus
+                # 2. OR all previous tokens were non-mathematical - also could
+                #    be unary
+                # If there were non-math tokens before it, it's likely a
+                # separator
+
+                # Check if all previous tokens are non-mathematical
+                all_prev_non_math = True
+                for j in range(i):
+                    if is_symbol(tokens[j]) or is_word(tokens[j], language):
+                        all_prev_non_math = False
+                        break
+
+                # Only include this operator if at start OR all previous
+                # non-math AND followed by a mathematical token
+                if all_prev_non_math and i + 1 < len(tokens):
+                    next_token = tokens[i + 1]
+                    if (
+                        is_int(next_token) or is_float(next_token) or
+                        is_constant(next_token) or is_unary(next_token) or
+                        next_token == '(' or is_word(next_token, language)
+                    ):
+                        start_index = i
+                        break
+            else:
+                # Start indexes can be an opening parenthesis, or a non-binary
+                # operator
+                start_index = i
+                break
 
     for part in reversed(tokens):
         if is_symbol(part) or is_word(part, language):

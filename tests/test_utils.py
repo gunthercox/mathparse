@@ -81,6 +81,18 @@ class ExtractExpressionTestCase(TestCase):
 
         self.assertEqual(result, '3 + 3')
 
+    def test_extract_expression_with_negative(self):
+        result = mathparse.extract_expression('-3 + 3', language='ENG')
+
+        self.assertEqual(result, '-3 + 3')
+
+    def test_extract_expression_with_words(self):
+        result = mathparse.extract_expression(
+            'three plus three', language='ENG'
+        )
+
+        self.assertEqual(result, 'three plus three')
+
     def test_ignore_punctuation(self):
         result = mathparse.extract_expression('3?', language='ENG')
 
