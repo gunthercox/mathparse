@@ -822,4 +822,10 @@ def extract_expression(dirty_string: str, language: str) -> str:
         else:
             end_index -= 1
 
-    return ' '.join(tokens[start_index:end_index])
+    result = ' '.join(tokens[start_index:end_index])
+
+    # Remove spaces around decimal points for cleaner output
+    # Replace " . " with "." to convert "-100 . 5" to "-100.5"
+    result = result.replace(' . ', '.')
+
+    return result

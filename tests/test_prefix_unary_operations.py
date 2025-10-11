@@ -231,6 +231,15 @@ class ExtractExpressionNegativeTestCase(TestCase):
         result = mathparse.extract_expression('5 - 3', language='ENG')
         self.assertEqual(result, '5 - 3')
 
+    def test_extract_negative_decimal(self):
+        """
+        Test: Extract leading negative decimal from sentence
+        """
+        result = mathparse.extract_expression(
+            'What is -100.5 * 20?', language='ENG'
+        )
+        self.assertEqual(result, '-100.5 * 20')
+
     def test_extract_negative_in_parentheses_with_words(self):
         """
         Test: Extract expression with negative in parentheses from sentence
