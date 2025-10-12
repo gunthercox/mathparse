@@ -30,7 +30,6 @@ def is_int(string: str) -> bool:
 def is_float(string: str) -> bool:
     """
     Return true if the string is a float.
-    Returns False for non-strings or strings without a decimal point.
     """
     try:
         float(string)
