@@ -11,11 +11,17 @@ class BooleanChecksTestCase(TestCase):
     def test_is_not_integer(self):
         self.assertFalse(mathparse.is_int('42.2'))
 
+    def test_is_not_integer_negative(self):
+        self.assertFalse(mathparse.is_int('-42.2'))
+
     def test_is_float(self):
         self.assertTrue(mathparse.is_float('0.5'))
 
     def test_is_not_float(self):
         self.assertFalse(mathparse.is_float('5'))
+
+    def test_is_not_float_negative(self):
+        self.assertTrue(mathparse.is_float('-0.5'))
 
     def test_is_constant(self):
         self.assertTrue(mathparse.is_constant('pi'))

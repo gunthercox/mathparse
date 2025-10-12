@@ -18,16 +18,19 @@ def is_int(string: str) -> bool:
     """
     Return true if string is an integer.
     """
-    try:
-        int(string)
-        return True
-    except ValueError:
-        return False
+    # Allow leading minus sign
+    if string[0] == '-':
+        # Must have at least one digit after the minus
+        return len(string) > 1 and string[1:].isdigit()
+    else:
+        # Must be all digits
+        return string.isdigit()
 
 
 def is_float(string: str) -> bool:
     """
     Return true if the string is a float.
+    Returns False for non-strings or strings without a decimal point.
     """
     try:
         float(string)
@@ -77,6 +80,27 @@ def is_word(word: str, language: str) -> bool:
     words = mathwords.words_for_language(language)
 
     return word in words
+
+
+def to_number(val) -> Union[int, float, str, Decimal]:
+    """
+    Convert a string to an int or float if possible.
+    """
+    # If already a number (int, float, Decimal), return as-is
+    if isinstance(val, (int, float, Decimal)):
+        return val
+
+    # Check if it's a constant and convert
+    if is_constant(val):
+        return mathwords.CONSTANTS[val]
+
+    # Otherwise, try to convert string to number
+    if is_int(val):
+        return int(val)
+    elif is_float(val):
+        return float(val)
+
+    return val
 
 
 def create_unicode_word_boundary_pattern(word: str) -> str:
@@ -459,11 +483,11 @@ def to_postfix(tokens: list) -> list:
 
     for token in tokens:
         if is_int(token):
-            postfix.append(int(token))
+            postfix.append(token)
         elif is_float(token):
-            postfix.append(float(token))
+            postfix.append(token)
         elif token in mathwords.CONSTANTS:
-            postfix.append(mathwords.CONSTANTS[token])
+            postfix.append(token)
         elif is_unary(token):
             opstack.append(token)
         elif token == '(':
@@ -516,6 +540,8 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
             stack.append(token)
         elif is_unary(token):
             a = stack.pop()
+            # Convert token (string) to number for unary function evaluation
+            a = to_number(a)
             total = mathwords.UNARY_FUNCTIONS[token](a)
         elif len(stack) == 1:
             raise PostfixTokenEvaluationException(
@@ -526,14 +552,15 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
         elif len(stack) > 1:
             b = stack.pop()
             a = stack.pop()
+
             if token == '+':
-                total = a + b
+                total = to_number(a) + to_number(b)
             elif token == '-':
-                total = a - b
+                total = to_number(a) - to_number(b)
             elif token == '*':
-                total = a * b
+                total = to_number(a) * to_number(b)
             elif token == '^':
-                total = a ** b
+                total = to_number(a) ** to_number(b)
             elif token == '/':
                 if Decimal(str(b)) == 0:
                     total = 'undefined'
@@ -543,19 +570,33 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
                 # Treat decimal points as a binary operator that combines the
                 # integer and fractional part of two numbers
                 # Example: 53 . 25 = 53.25, -3 . 5 = -3.5
-                if b == 0:
-                    total = Decimal(a)
+
+                # Convert b to number
+                numeric_b = to_number(b)
+
+                if numeric_b == 0:
+                    # Convert a to number
+                    numeric_a = to_number(a)
+                    total = Decimal(numeric_a)
                 else:
-                    # Count the digits in b to determine the divisor
-                    digits = len(str(int(b)))
+                    # Check if 'a' has a negative sign (handles -0 case)
+                    is_negative = str(a).startswith('-')
+
+                    # Convert a to number for calculation
+                    numeric_a = to_number(a)
+
+                    # Count the digits in the original string b to preserve
+                    # leading zeros (e.g., "01" has 2 digits, not 1)
+                    digits = len(str(b))
                     divisor = 10 ** digits
-                    fractional_part = b / divisor
-                    # Handle negative numbers correctly: -3 . 5 should be -3.5,
-                    # not -2.5
-                    if a < 0:
-                        total = a - fractional_part
+                    fractional_part = numeric_b / divisor
+
+                    # Handle negatives: -3 . 5 = -3.5, not -2.5
+                    # Also -0 . 5 = -0.5 (check string since -0 == 0)
+                    if is_negative:
+                        total = numeric_a - fractional_part
                     else:
-                        total = a + fractional_part
+                        total = numeric_a + fractional_part
             else:
                 raise PostfixTokenEvaluationException(
                     'Unknown token "{}"'.format(token)
@@ -570,7 +611,16 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
             'The postfix expression resulted in an empty stack'
         )
 
-    return stack.pop()
+    result = stack.pop()
+
+    # Convert final result from string to number if needed
+    if isinstance(result, str):
+        if is_int(result):
+            result = int(result)
+        elif is_float(result):
+            result = float(result)
+
+    return result
 
 
 def tokenize(string: str, language: str = None, escape: str = '___') -> list:
@@ -822,4 +872,10 @@ def extract_expression(dirty_string: str, language: str) -> str:
         else:
             end_index -= 1
 
-    return ' '.join(tokens[start_index:end_index])
+    result = ' '.join(tokens[start_index:end_index])
+
+    # Remove spaces around decimal points for cleaner output
+    # Replace " . " with "." to convert "-100 . 5" to "-100.5"
+    result = result.replace(' . ', '.')
+
+    return result
