@@ -250,3 +250,148 @@ class ExtractExpressionNegativeTestCase(TestCase):
         # NOTE: Spaces are currently added, but ideally these will be removed
         # in the future
         self.assertEqual(result, '( -3 ) + 5')
+
+
+class NegativeDecimalsLessThanOneTestCase(TestCase):
+    """
+    Test cases for negative decimal numbers between -1 and 0.
+
+    This addresses a bug where negative decimals less than 1
+    (e.g., -0.2, -0.5) were losing their negative sign during parsing.
+    The issue was caused by Python's -0 == 0 equality, where int('-0')
+    returns 0, losing sign information.
+    """
+
+    def test_negative_zero_point_two(self):
+        """
+        Test: -0.2 should equal -0.2
+        """
+        result = mathparse.parse('-0.2')
+        self.assertEqual(result, -0.2)
+
+    def test_negative_zero_point_five(self):
+        """
+        Test: -0.5 should equal -0.5
+        """
+        result = mathparse.parse('-0.5')
+        self.assertEqual(result, -0.5)
+
+    def test_negative_zero_point_nine(self):
+        """
+        Test: -0.9 should equal -0.9
+        """
+        result = mathparse.parse('-0.9')
+        self.assertEqual(result, -0.9)
+
+    def test_negative_zero_point_one(self):
+        """
+        Test: -0.1 should equal -0.1
+        """
+        result = mathparse.parse('-0.1')
+        self.assertEqual(result, -0.1)
+
+    def test_negative_zero_point_ninety_nine(self):
+        """
+        Test: -0.99 should equal -0.99"""
+        result = mathparse.parse('-0.99')
+        self.assertEqual(result, -0.99)
+
+    def test_negative_zero_point_zero_one(self):
+        """
+        Test: -0.01 should equal -0.01
+        """
+        result = mathparse.parse('-0.01')
+        self.assertEqual(result, -0.01)
+
+    def test_negative_zero_point_nine_nine_nine(self):
+        """
+        Test: -0.999 should equal -0.999
+        """
+        result = mathparse.parse('-0.999')
+        self.assertEqual(result, -0.999)
+
+    def test_negative_decimal_in_addition(self):
+        """
+        Test: -0.5 + 1 should equal 0.5
+        """
+        result = mathparse.parse('-0.5 + 1')
+        self.assertEqual(result, 0.5)
+
+    def test_negative_decimal_in_subtraction(self):
+        """
+        Test: 2 - -0.5 should equal 2.5
+        """
+        result = mathparse.parse('2 - -0.5')
+        self.assertEqual(result, 2.5)
+
+    def test_negative_decimal_in_multiplication(self):
+        """
+        Test: -0.5 * 4 should equal -2.0
+        """
+        result = mathparse.parse('-0.5 * 4')
+        self.assertEqual(result, -2.0)
+
+    def test_negative_decimal_in_division(self):
+        """
+        Test: -0.8 / 2 should equal -0.4
+        """
+        result = mathparse.parse('-0.8 / 2')
+        self.assertEqual(float(result), -0.4)
+
+    def test_multiple_negative_decimals(self):
+        """
+        Test: -0.3 + -0.2 should equal -0.5
+        """
+        result = mathparse.parse('-0.3 + -0.2')
+        self.assertAlmostEqual(result, -0.5, places=10)
+
+    def test_negative_decimal_with_parentheses(self):
+        """
+        Test: (-0.5) should equal -0.5
+        """
+        result = mathparse.parse('(-0.5)')
+        self.assertEqual(result, -0.5)
+
+    def test_negative_decimal_in_complex_expression(self):
+        """
+        Test: (-0.5 + 1) * 2 should equal 1.0
+        """
+        result = mathparse.parse('(-0.5 + 1) * 2')
+        self.assertEqual(result, 1.0)
+
+    def test_positive_decimals_still_work(self):
+        """
+        Test: 0.5 should equal 0.5
+        """
+        result = mathparse.parse('0.5')
+        self.assertEqual(result, 0.5)
+
+    def test_negative_integers_still_work(self):
+        """
+        Test: -5 should equal -5
+        """
+        result = mathparse.parse('-5')
+        self.assertEqual(result, -5)
+
+    def test_negative_decimals_greater_than_one_still_work(self):
+        """
+        Test: -1.5 should equal -1.5
+        """
+        result = mathparse.parse('-1.5')
+        self.assertEqual(result, -1.5)
+
+    def test_temperature_conversion_use_case(self):
+        """
+        -0.2 Celsius to Fahrenheit formula: (-0.2 * 9/5) + 32 = 31.64
+        (Example calculation)
+        """
+        result = mathparse.parse('-0.2 * 9 / 5 + 32')
+        self.assertAlmostEqual(float(result), 31.64, places=2)
+
+    def test_financial_calculation_use_case(self):
+        """
+        Balance: $100, transaction: -$0.25, expected: $99.75
+        (Example calculation)
+        """
+        result = mathparse.parse('100 + -0.25')
+        self.assertEqual(result, 99.75)
