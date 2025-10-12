@@ -18,16 +18,19 @@ def is_int(string: str) -> bool:
     """
     Return true if string is an integer.
     """
-    try:
-        int(string)
-        return True
-    except ValueError:
-        return False
+    # Allow leading minus sign
+    if string[0] == '-':
+        # Must have at least one digit after the minus
+        return len(string) > 1 and string[1:].isdigit()
+    else:
+        # Must be all digits
+        return string.isdigit()
 
 
 def is_float(string: str) -> bool:
     """
     Return true if the string is a float.
+    Returns False for non-strings or strings without a decimal point.
     """
     try:
         float(string)
@@ -79,14 +82,24 @@ def is_word(word: str, language: str) -> bool:
     return word in words
 
 
-def to_number(val):
+def to_number(val) -> Union[int, float, str, Decimal]:
     """
     Convert a string to an int or float if possible.
     """
+    # If already a number (int, float, Decimal), return as-is
+    if isinstance(val, (int, float, Decimal)):
+        return val
+
+    # Check if it's a constant and convert
+    if is_constant(val):
+        return mathwords.CONSTANTS[val]
+
+    # Otherwise, try to convert string to number
     if is_int(val):
         return int(val)
     elif is_float(val):
         return float(val)
+
     return val
 
 
@@ -474,7 +487,7 @@ def to_postfix(tokens: list) -> list:
         elif is_float(token):
             postfix.append(token)
         elif token in mathwords.CONSTANTS:
-            postfix.append(mathwords.CONSTANTS[token])
+            postfix.append(token)
         elif is_unary(token):
             opstack.append(token)
         elif token == '(':
