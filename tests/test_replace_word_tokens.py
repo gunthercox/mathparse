@@ -52,11 +52,31 @@ class EnglishWordTokenTestCase(TestCase):
         )
         self.assertEqual(result, '19 * (50 + 4)')
 
+    def test_tens_with_compound_numbers(self):
+        result = mathparse.replace_word_tokens(
+            'ninety seven - 7', language='ENG'
+        )
+        self.assertEqual(result, '(90 + 7) - 7')
+
+    def test_tens_with_compound_numbers_hyphenated(self):
+        result = mathparse.replace_word_tokens(
+            'ninety-seven - 7', language='ENG'
+        )
+        self.assertEqual(result, '(90 + 7) - 7')
+
     def test_tens_and_hundreds_with_spaces(self):
         result = mathparse.replace_word_tokens(
             'one hundred times fifty four', language='ENG'
         )
         self.assertEqual(result, '(1 * 100) * (50 + 4)')
+
+    def test_tens_with_hundreds_multiplier(self):
+        result = mathparse.replace_word_tokens(
+            'eighteen hundred and twenty-one',
+            language='ENG',
+            stopwords={'and'}
+        )
+        self.assertEqual(result, '(18 * 100) + (20 + 1)')
 
     def test_hyphenated_numbers(self):
         result = mathparse.replace_word_tokens(
