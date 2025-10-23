@@ -57,6 +57,13 @@ copyright = '{}, {}'.format(
     author
 )
 
+# Project description
+project_description = (
+    'Secure Python library for parsing and evaluating mathematical '
+    'expressions. Safe alternative to eval() with multilingual support '
+    'for natural language math in 13+ languages.'
+)
+
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
 # built documents.
@@ -117,6 +124,22 @@ html_show_sourcelink = True
 
 html_baseurl = 'https://mathparse.chatterbot.us/'
 
+html_context = {
+    'extra_css_files': [
+        '_static/style.css'
+    ],
+    'meta': {
+        'description': project_description,
+        'keywords': (
+            'python, math parser, eval alternative, mathematical expressions, '
+            'natural language processing, multilingual, calculator, '
+            'secure evaluation, postfix notation, RPN, safe eval, '
+            'reverse polish notation, expression parser'
+        ),
+        'author': author,
+    }
+}
+
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
@@ -139,12 +162,6 @@ html_sidebars = {
 
 # Output file base name for HTML help builder.
 htmlhelp_basename = 'mathparsedoc'
-
-html_context = {
-    'extra_css_files': [
-        '_static/style.css'
-    ]
-}
 
 # -- Options for LaTeX output ---------------------------------------------
 
@@ -192,8 +209,8 @@ man_pages = [
 #  dir menu entry, description, category)
 texinfo_documents = [
     (master_doc, 'mathparse', 'mathparse Documentation',
-     author, 'mathparse', 'One line description of project.',
-     'Miscellaneous'),
+     author, 'mathparse', project_description,
+     'Development/Libraries/Python'),
 ]
 
 

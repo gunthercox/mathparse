@@ -17,6 +17,7 @@ Mathparse Documentation
    :maxdepth: 1
 
    setup
+   quickstart
    examples
    languages
    utils

@@ -11,6 +11,54 @@
 {{ super() }}
 {%- endblock %}
 
+{%- block extrahead %}
+    {{ super() }}
+
+    {# SEO Meta Tags #}
+    <meta name="description" content="{{ meta.get('description', 'mathparse: Secure Python library for parsing and evaluating mathematical expressions. Supports 13+ languages, natural language input, and safe eval() alternative with zero dependencies.') if meta else 'mathparse: Secure Python library for parsing and evaluating mathematical expressions. Supports 13+ languages, natural language input, and safe eval() alternative with zero dependencies.' }}">
+    <meta name="keywords" content="python, math parser, eval alternative, mathematical expressions, natural language processing, multilingual, calculator, secure evaluation, postfix notation, RPN, safe eval">
+    <meta name="author" content="Gunther Cox">
+
+    {# Open Graph Meta Tags for Social Sharing #}
+    <meta property="og:title" content="{{ title|striptags|e }}{% if title %} - {% endif %}mathparse">
+    <meta property="og:description" content="{{ meta.get('description', 'Secure Python library for parsing mathematical expressions. Safe alternative to eval() with multilingual support.') if meta else 'Secure Python library for parsing mathematical expressions. Safe alternative to eval() with multilingual support.' }}">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="{{ pageurl|e }}">
+    <meta property="og:site_name" content="mathparse Documentation">
+    <meta property="og:image" content="https://mathparse.chatterbot.us/_static/mathparse.png">
+
+    {# Additional SEO Tags #}
+    <meta name="robots" content="index, follow">
+    <meta name="language" content="English">
+    <meta name="revisit-after" content="7 days">
+
+    {# Structured Data for Search Engines #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      "name": "mathparse",
+      "description": "Secure Python library for parsing and evaluating mathematical expressions with multilingual support",
+      "url": "https://mathparse.chatterbot.us",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Cross-platform",
+      "programmingLanguage": "Python",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "author": {
+        "@type": "Person",
+        "name": "Gunther Cox"
+      },
+      "codeRepository": "https://github.com/gunthercox/mathparse",
+      "softwareVersion": "{{ version|e }}",
+      "license": "https://opensource.org/licenses/MIT"
+    }
+    </script>
+{%- endblock %}
+
 {%- block relbaritems %}
     <li class="right"><a href="{{github_page_link()}}">Edit on GitHub</a> |</li>
 {% endblock %}
