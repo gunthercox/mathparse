@@ -146,7 +146,12 @@ html_context = {
 html_static_path = ['_static']
 
 html_css_files = [
-    'style.css'
+    'style.css',
+    'silktide-consent-manager.css'
+]
+
+html_js_files = [
+    'silktide-consent-manager.js'
 ]
 
 # Custom sidebar templates, must be a dictionary that maps document names

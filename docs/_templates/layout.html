@@ -5,8 +5,8 @@
 
 {%- block htmltitle %}
 
-    <link rel="stylesheet" id="silktide-consent-manager-css" href="path-to-css/silktide-consent-manager.css">
-    <script src="path-to-js/silktide-consent-manager.js"></script>
+    <link rel="stylesheet" id="silktide-consent-manager-css" href="{{ pathto('_static/silktide-consent-manager.css', 1) }}">
+    <script src="{{ pathto('_static/silktide-consent-manager.js', 1) }}"></script>
     <script>
     silktideCookieBannerManager.updateCookieBannerConfig({
       background: {
