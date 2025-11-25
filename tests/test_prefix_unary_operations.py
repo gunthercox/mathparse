@@ -155,7 +155,13 @@ class NegativeWithUnaryFunctionsTestCase(TestCase):
         # Verify it causes the expected math error
         with self.assertRaises(ValueError) as context:
             mathparse.parse('sqrt -16')
-        self.assertIn("math domain error", str(context.exception).lower())
+        # Python 3.14+ uses more specific error messages
+        error_msg = str(context.exception).lower()
+        self.assertTrue(
+            "math domain error" in error_msg or
+            "expected a nonnegative input" in error_msg,
+            f"Unexpected error message: {error_msg}"
+        )
 
     def test_log_with_negative_causes_math_error(self):
         """
@@ -168,7 +174,13 @@ class NegativeWithUnaryFunctionsTestCase(TestCase):
         # Verify it causes the expected math error
         with self.assertRaises(ValueError) as context:
             mathparse.parse('log -10')
-        self.assertIn("math domain error", str(context.exception).lower())
+        # Python 3.14+ uses more specific error messages
+        error_msg = str(context.exception).lower()
+        self.assertTrue(
+            "math domain error" in error_msg or
+            "expected a positive input" in error_msg,
+            f"Unexpected error message: {error_msg}"
+        )
 
     def test_sqrt_with_positive_after_operator(self):
         """
