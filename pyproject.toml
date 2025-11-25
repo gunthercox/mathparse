@@ -12,7 +12,7 @@ version = {attr = "mathparse.__version__"}
 
 [project]
 name = "mathparse"
-requires-python = ">=3.9,<3.14"
+requires-python = ">=3.9,<3.15"
 urls = { Documentation = "https://mathparse.chatterbot.us", Repository = "https://github.com/gunthercox/mathparse", Changelog = "https://github.com/gunthercox/mathparse/releases" }
 authors = [
   {name = "Gunther Cox"},
