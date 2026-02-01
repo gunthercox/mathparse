@@ -38,7 +38,7 @@ class UnaryWordOperatorTestCase(TestCase):
         self.assertEqual(result, 2)
 
     def test_square_root_with_decimal(self):
-        result = mathparse.parse('sqrt(4) . 5')
+        mathparse.parse('sqrt(4) . 5')
 
         # TODO: Should this raise a parsing error instead of
         # returning a number (2.5)?
