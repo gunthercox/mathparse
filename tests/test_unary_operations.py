@@ -37,6 +37,14 @@ class UnaryWordOperatorTestCase(TestCase):
 
         self.assertEqual(result, 2)
 
+    def test_square_root_with_decimal(self):
+        result = mathparse.parse('sqrt(4) . 5')
+
+        # TODO: Should this raise a parsing error instead of
+        # returning a number (2.5)?
+
+        raise self.skipTest('Skip until decision is made on expected behavior')
+
     def test_negative_number(self):
         result = mathparse.parse('-4 + 2')
 
