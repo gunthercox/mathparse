@@ -28,6 +28,15 @@ class UnaryOperatorTestCase(TestCase):
 
         self.assertEqual(result, 3074)
 
+    def test_exponent_right_associative(self):
+        """
+        Exponentiation is right-associative: 2^3^2 = 2^(3^2) = 512,
+        not (2^3)^2 = 64.
+        """
+        result = mathparse.parse('2 ^ 3 ^ 2')
+
+        self.assertEqual(result, 512)
+
     def test_without_unary_operator_fre(self):
         result = mathparse.parse('50 * (85 / 100)', language='FRE')
         self.assertEqual(result, 42.5)

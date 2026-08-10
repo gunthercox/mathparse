@@ -477,6 +477,10 @@ def to_postfix(tokens: list) -> list:
     # Unary functions have a higher precedence than binary operators
     unary_precedence = max(precedence.values()) + 1
 
+    # Right-associative operators use strict inequality when popping,
+    # so that e.g. 2^3^2 evaluates as 2^(3^2) = 512, not (2^3)^2 = 64
+    right_associative = {'^'}
+
     postfix = []
     opstack = []
 
@@ -497,13 +501,23 @@ def to_postfix(tokens: list) -> list:
                 postfix.append(top_token)
                 top_token = opstack.pop()
         elif is_binary(token):
-            # For binary operators, pop operators with higher or
-            # equal precedence
+            # Right-associative operators only pop operators of strictly
+            # higher precedence; left-associative operators also pop equal
+            # precedence (ensuring left-to-right evaluation order).
+            if token in right_associative:
+                should_pop_op = lambda top: (  # noqa: E731
+                    top in precedence and
+                    precedence[top] > precedence[token]
+                )
+            else:
+                should_pop_op = lambda top: (  # noqa: E731
+                    top in precedence and
+                    precedence[top] >= precedence[token]
+                )
             while (opstack != []) and (
                 (
-                    opstack[-1] in precedence and token in precedence and (
-                        precedence[opstack[-1]] >= precedence[token]
-                    )
+                    opstack[-1] in precedence and token in precedence and
+                    should_pop_op(opstack[-1])
                 ) or
                 (
                     is_unary(
