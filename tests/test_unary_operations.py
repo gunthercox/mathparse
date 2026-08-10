@@ -10,6 +10,24 @@ class UnaryOperatorTestCase(TestCase):
 
         self.assertEqual(result, 256)
 
+    def test_exponent_precedence_over_addition_and_multiplication(self):
+        """
+        Exponentiation must bind tighter than + and *.
+        2 ^ 3 + 4 * 5 = (2^3) + (4*5) = 8 + 20 = 28
+        """
+        result = mathparse.parse('2 ^ 3 + 4 * 5')
+
+        self.assertEqual(result, 28)
+
+    def test_exponent_precedence_mixed_expression(self):
+        """
+        Exponentiation must bind tighter than * and +.
+        2 + 3 * 4 ^ 5 = 2 + 3 * (4^5) = 2 + 3*1024 = 3074
+        """
+        result = mathparse.parse('2 + 3 * 4 ^ 5')
+
+        self.assertEqual(result, 3074)
+
     def test_without_unary_operator_fre(self):
         result = mathparse.parse('50 * (85 / 100)', language='FRE')
         self.assertEqual(result, 42.5)
