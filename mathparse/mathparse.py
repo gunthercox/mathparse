@@ -85,19 +85,23 @@ def to_number(val) -> Union[int, float, str, Decimal]:
     """
     Convert a string to an int or float if possible.
     """
-    # If already a number (int, float, Decimal), return as-is
-    if isinstance(val, (int, float, Decimal)):
-        return val
+    # If already a number (Decimal), return as-is
+    if isinstance(val, Decimal):
+        return Decimal(val)
+
+    # Convert other numbers to Decimal
+    if isinstance(val, (int, float)):
+        return Decimal(val)
 
     # Check if it's a constant and convert
     if is_constant(val):
-        return mathwords.CONSTANTS[val]
+        return Decimal(mathwords.CONSTANTS[val])
 
     # Otherwise, try to convert string to number
     if is_int(val):
-        return int(val)
+        return Decimal(int(val))
     elif is_float(val):
-        return float(val)
+        return Decimal(float(val))
 
     return val
 
