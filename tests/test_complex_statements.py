@@ -81,7 +81,9 @@ class ComplexStatementsTestCase(TestCase):
 
     def test_with_operations_and_single_numbers(self):
         """
-        Test using the unicode π symbol in a complex expression.
+        Test mixed integer and float operations in a complex expression.
         """
-        result = mathparse.parse("(1 + 3 + 2.0 + 6) * 1")
+        result = mathparse.parse(
+            "(1 + 3 + 2.0 + 6) * 0.00001"
+        )
         self.assertAlmostEqual(result, 0.00012, places=5)

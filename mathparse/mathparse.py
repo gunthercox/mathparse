@@ -83,15 +83,15 @@ def is_word(word: str, language: str) -> bool:
 
 def to_number(val) -> Union[int, float, str, Decimal]:
     """
-    Convert a string to an int or float if possible.
+    Convert a value to a Decimal if possible.
     """
     # If already a number (Decimal), return as-is
     if isinstance(val, Decimal):
-        return Decimal(val)
+        return val
 
     # Convert other numbers to Decimal
     if isinstance(val, (int, float)):
-        return Decimal(val)
+        return Decimal(str(val))
 
     # Check if it's a constant and convert
     if is_constant(val):
@@ -99,9 +99,9 @@ def to_number(val) -> Union[int, float, str, Decimal]:
 
     # Otherwise, try to convert string to number
     if is_int(val):
-        return Decimal(int(val))
+        return Decimal(val)
     elif is_float(val):
-        return Decimal(float(val))
+        return Decimal(val)
 
     return val
 
@@ -626,6 +626,9 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
 
     result = stack.pop()
 
+    # Convert final result from string or Decimal to a public Python number
+    result = normalize_number(result)
+
     # Convert final result from string to number if needed
     if isinstance(result, str):
         if is_int(result):
@@ -634,6 +637,19 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
             result = float(result)
 
     return result
+
+
+def normalize_number(val):
+    """
+    Convert Decimal arithmetic results to public int or float values.
+    """
+    if not isinstance(val, Decimal):
+        return val
+
+    if val == val.to_integral_value():
+        return int(val)
+
+    return float(val)
 
 
 def tokenize(string: str, language: str = None, escape: str = '___') -> list:
