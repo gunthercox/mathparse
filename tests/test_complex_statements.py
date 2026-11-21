@@ -78,3 +78,10 @@ class ComplexStatementsTestCase(TestCase):
         """
         result = mathparse.parse('π + 1')
         self.assertAlmostEqual(result, 3.141593 + 1, places=5)
+
+    def test_with_operations_and_single_numbers(self):
+        """
+        Test using the unicode π symbol in a complex expression.
+        """
+        result = mathparse.parse("(1 + 3 + 2.0 + 6) * 1")
+        self.assertAlmostEqual(result, 0.00012, places=5)
