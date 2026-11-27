@@ -230,7 +230,7 @@ sphinx-build -nW -b html ./docs/ ./build/
 
 - **Mathematical constants**: `pi` (3.141693), `e` (2.718281) in `CONSTANTS`
 - **Unary functions**: `sqrt`, `log` (base 10) in `UNARY_FUNCTIONS`
-- **Python version**: Requires Python 3.10-3.14
+- **Python version**: Requires Python 3.11-3.14
 - **Zero dependencies**: Pure Python implementation
 
 ## Language Extension Guidelines
