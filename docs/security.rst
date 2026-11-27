@@ -157,6 +157,12 @@ Best Practices for Production
 
 To use mathparse securely with user input in production environments:
 
+Exponentiation rejects exponents with an absolute value above 10,000 and
+results estimated to have more than 4,000 digits, raising
+``PostfixTokenEvaluationException``. These limits do not bound all parsing or
+arithmetic costs. Applications processing untrusted input should also limit
+input size and enforce time and memory limits externally.
+
 **1. Always Use Error Handling**
 
 .. code-block:: python

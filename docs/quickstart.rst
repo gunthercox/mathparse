@@ -13,7 +13,7 @@ Install mathparse using pip:
     pip install mathparse
 
 Mathparse should now be installed and ready to use.
-mathparse with Python 3.10 - 3.14 and has **zero dependencies**.
+mathparse with Python 3.11 - 3.14 and has **zero dependencies**.
 
 Your First Calculation
 -----------------------
