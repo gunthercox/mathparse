@@ -1,3 +1,4 @@
+from decimal import Decimal
 from unittest import TestCase
 from mathparse import mathparse
 
@@ -86,4 +87,119 @@ class ComplexStatementsTestCase(TestCase):
         result = mathparse.parse(
             "(1 + 3 + 2.0 + 6) * 0.00001"
         )
-        self.assertAlmostEqual(result, 0.00012, places=5)
+        self.assertEqual(result, Decimal('0.00012'))
+
+    def test_mixed_decimal_and_float_operations(self):
+        """
+        Test arithmetic with Decimal and float operands in either order.
+        """
+        cases = {
+            '1 / 2 + 0.25': 0.75,
+            '0.25 + 1 / 2': 0.75,
+            '1 / 2 - 0.25': 0.25,
+            '0.25 - 1 / 2': -0.25,
+            '1 / 2 * 0.25': 0.125,
+            '0.25 * (1 / 2)': 0.125,
+            '(1 / 2) ^ 0.5': 2 ** -0.5,
+        }
+        for expression, expected in cases.items():
+            with self.subTest(expression=expression):
+                self.assertAlmostEqual(float(mathparse.parse(expression)),
+                                       expected)
+
+    def test_numeric_result_types(self):
+        """
+        Preserve integer, float, and division result types.
+        """
+        self.assertIsInstance(mathparse.parse('2 ^ 100'), int)
+        self.assertEqual(mathparse.parse('2 ^ 100'), 2 ** 100)
+        self.assertIsInstance(mathparse.parse('1.5 + 2'), float)
+        self.assertEqual(mathparse.parse('1 / 3'), Decimal(1) / Decimal(3))
+
+    def test_expensive_powers_are_rejected(self):
+        """
+        Reject expensive powers before computing them.
+        """
+        expressions = (
+            '9 ^ 999999', '9 ^ 9 ^ 9', '10 ^ 4000',
+            '(10 / 1) ^ 4000', '0.1 ^ -10000',
+            '2 ^ -10001', '9.5 ^ 500',
+        )
+        for expression in expressions:
+            with self.subTest(expression=expression):
+                with self.assertRaises(
+                    mathparse.PostfixTokenEvaluationException
+                ):
+                    mathparse.parse(expression)
+
+    def test_reasonable_powers_are_allowed(self):
+        """
+        Keep normal and moderately large powers available.
+        """
+        self.assertEqual(mathparse.parse('2 ^ 10'), 1024)
+        self.assertEqual(mathparse.parse('2 ^ 10000'), 2 ** 10000)
+        self.assertEqual(mathparse.parse('2 ^ -3'), 0.125)
+        self.assertEqual(mathparse.parse('1.0 ^ 10000'), 1)
+
+    def test_reasonable_decimal_powers_are_allowed(self):
+        """
+        Estimate Decimal power size closely enough to allow safe results.
+        """
+        self.assertEqual(
+            mathparse.parse('(2 / 1) ^ 10000'),
+            Decimal('2') ** 10000,
+        )
+        self.assertEqual(
+            mathparse.parse('(99 / 100) ^ -10000'),
+            Decimal('0.99') ** -10000,
+        )
+
+    def test_oversized_integer_results_are_rejected(self):
+        """
+        Reject oversized products before division or decimal-point conversion.
+        """
+        expressions = (
+            '2 ^ 10000 * 2 ^ 10000',
+            '(2 ^ 10000 * 2 ^ 10000) / 3',
+            '(2 ^ 10000 * 2 ^ 10000) . 5',
+        )
+        for expression in expressions:
+            with self.subTest(expression=expression):
+                with self.assertRaises(
+                    mathparse.PostfixTokenEvaluationException
+                ):
+                    mathparse.parse(expression)
+
+    def test_oversized_integer_literals_are_rejected(self):
+        """
+        Reject oversized integer tokens both alone and as operands.
+        """
+        oversized_integer = '9' * 4001
+        expressions = (
+            oversized_integer,
+            oversized_integer + ' + 1',
+        )
+        for expression in expressions:
+            with self.subTest(expression_length=len(expression)):
+                with self.assertRaises(
+                    mathparse.PostfixTokenEvaluationException
+                ):
+                    mathparse.parse(expression)
+
+        largest_allowed_integer = '9' * 4000
+        self.assertEqual(
+            mathparse.parse(largest_allowed_integer),
+            int(largest_allowed_integer),
+        )
+
+    def test_oversized_expressions_are_rejected(self):
+        """
+        Bound input work through both parse and the public tokenizer.
+        """
+        expression = '1+' * (mathparse.MAX_EXPRESSION_LENGTH // 2) + '1'
+        self.assertGreater(len(expression), mathparse.MAX_EXPRESSION_LENGTH)
+
+        with self.assertRaises(mathparse.PostfixTokenEvaluationException):
+            mathparse.parse(expression)
+        with self.assertRaises(mathparse.PostfixTokenEvaluationException):
+            mathparse.tokenize(expression)

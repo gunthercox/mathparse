@@ -1,7 +1,8 @@
 """
 Methods for evaluating mathematical equations in strings.
 """
-from decimal import Decimal
+from decimal import Decimal, DecimalException, localcontext
+import math
 from typing import Union
 from . import mathwords
 import re
@@ -12,6 +13,65 @@ class PostfixTokenEvaluationException(Exception):
     Exception to be raised when an expression cannot be evaluated.
     """
     pass
+
+
+MAX_POWER_EXPONENT = 10000
+MAX_RESULT_DIGITS = 4000
+MAX_EXPRESSION_LENGTH = 10000
+MAX_RESULT_BITS = int(MAX_RESULT_DIGITS * math.log2(10))
+
+
+def evaluate_power(base, exponent):
+    """
+    Evaluate a power after checking its exponent and estimated result size.
+    """
+    if (
+        isinstance(exponent, Decimal) and not exponent.is_finite()
+    ) or (
+        isinstance(exponent, float) and not math.isfinite(exponent)
+    ):
+        raise PostfixTokenEvaluationException('Non-finite power exponent')
+
+    if abs(exponent) > MAX_POWER_EXPONENT:
+        raise PostfixTokenEvaluationException('Exponent exceeds the limit')
+
+    if isinstance(base, Decimal):
+        if not base.is_finite():
+            raise PostfixTokenEvaluationException('Non-finite power base')
+        absolute_base = base.copy_abs()
+    else:
+        if isinstance(base, float) and not math.isfinite(base):
+            raise PostfixTokenEvaluationException('Non-finite power base')
+        absolute_base = Decimal(str(abs(base)))
+
+    try:
+        with localcontext() as context:
+            context.prec = 50
+            if absolute_base in (Decimal(0), Decimal(1)):
+                estimated_digits = Decimal(0)
+            else:
+                estimated_digits = (
+                    Decimal(str(exponent)) * absolute_base.log10()
+                )
+            if estimated_digits >= (
+                Decimal(MAX_RESULT_DIGITS) - Decimal('1e-35')
+            ):
+                raise PostfixTokenEvaluationException(
+                    'Power result exceeds the limit'
+                )
+    except DecimalException as e:
+        raise PostfixTokenEvaluationException(
+            'Unable to estimate power result'
+        ) from e
+
+    try:
+        return base ** exponent
+    except (
+        DecimalException, OverflowError, ValueError, ZeroDivisionError
+    ) as e:
+        raise PostfixTokenEvaluationException(
+            'Unable to evaluate power'
+        ) from e
 
 
 def is_int(string: str) -> bool:
@@ -83,25 +143,31 @@ def is_word(word: str, language: str) -> bool:
 
 def to_number(val) -> Union[int, float, str, Decimal]:
     """
-    Convert a value to a Decimal if possible.
+    Convert a string to an int or float if possible.
     """
-    # If already a number (Decimal), return as-is
-    if isinstance(val, Decimal):
+    # If already a number (int, float, Decimal), return as-is
+    if isinstance(val, (int, float, Decimal)):
         return val
-
-    # Convert other numbers to Decimal
-    if isinstance(val, (int, float)):
-        return Decimal(str(val))
 
     # Check if it's a constant and convert
     if is_constant(val):
-        return Decimal(mathwords.CONSTANTS[val])
+        return mathwords.CONSTANTS[val]
 
     # Otherwise, try to convert string to number
     if is_int(val):
-        return Decimal(val)
+        digit_count = len(val) - int(val.startswith('-'))
+        if digit_count > MAX_RESULT_DIGITS:
+            raise PostfixTokenEvaluationException(
+                'Integer exceeds the limit'
+            )
+        try:
+            return int(val)
+        except ValueError as e:
+            raise PostfixTokenEvaluationException(
+                'Unable to parse integer'
+            ) from e
     elif is_float(val):
-        return Decimal(val)
+        return float(val)
 
     return val
 
@@ -565,15 +631,24 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
         elif len(stack) > 1:
             b = stack.pop()
             a = stack.pop()
+            numeric_a = to_number(a)
+            numeric_b = to_number(b)
+            if isinstance(numeric_a, Decimal) and isinstance(numeric_b, float):
+                numeric_b = Decimal(str(numeric_b))
+            elif (
+                isinstance(numeric_a, float) and
+                isinstance(numeric_b, Decimal)
+            ):
+                numeric_a = Decimal(str(numeric_a))
 
             if token == '+':
-                total = to_number(a) + to_number(b)
+                total = numeric_a + numeric_b
             elif token == '-':
-                total = to_number(a) - to_number(b)
+                total = numeric_a - numeric_b
             elif token == '*':
-                total = to_number(a) * to_number(b)
+                total = numeric_a * numeric_b
             elif token == '^':
-                total = to_number(a) ** to_number(b)
+                total = evaluate_power(numeric_a, numeric_b)
             elif token == '/':
                 if Decimal(str(b)) == 0:
                     total = 'undefined'
@@ -584,25 +659,19 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
                 # integer and fractional part of two numbers
                 # Example: 53 . 25 = 53.25, -3 . 5 = -3.5
 
-                # Convert b to number
-                numeric_b = to_number(b)
-
                 if numeric_b == 0:
-                    # Convert a to number
-                    numeric_a = to_number(a)
                     total = Decimal(numeric_a)
                 else:
                     # Check if 'a' has a negative sign (handles -0 case)
                     is_negative = str(a).startswith('-')
-
-                    # Convert a to number for calculation
-                    numeric_a = to_number(a)
 
                     # Count the digits in the original string b to preserve
                     # leading zeros (e.g., "01" has 2 digits, not 1)
                     digits = len(str(b))
                     divisor = 10 ** digits
                     fractional_part = numeric_b / divisor
+                    if isinstance(numeric_a, Decimal):
+                        fractional_part = Decimal(str(numeric_b)) / divisor
 
                     # Handle negatives: -3 . 5 = -3.5, not -2.5
                     # Also -0 . 5 = -0.5 (check string since -0 == 0)
@@ -616,6 +685,10 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
                 )
 
         if total is not None:
+            if isinstance(total, int) and total.bit_length() > MAX_RESULT_BITS:
+                raise PostfixTokenEvaluationException(
+                    'Result exceeds the limit'
+                )
             stack.append(total)
 
     # If the stack is empty the tokens could not be evaluated
@@ -626,30 +699,14 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
 
     result = stack.pop()
 
-    # Convert final result from string or Decimal to a public Python number
-    result = normalize_number(result)
-
     # Convert final result from string to number if needed
     if isinstance(result, str):
         if is_int(result):
-            result = int(result)
+            result = to_number(result)
         elif is_float(result):
             result = float(result)
 
     return result
-
-
-def normalize_number(val):
-    """
-    Convert Decimal arithmetic results to public int or float values.
-    """
-    if not isinstance(val, Decimal):
-        return val
-
-    if val == val.to_integral_value():
-        return int(val)
-
-    return float(val)
 
 
 def tokenize(string: str, language: str = None, escape: str = '___') -> list:
@@ -670,6 +727,11 @@ def tokenize(string: str, language: str = None, escape: str = '___') -> list:
     Returns:
         list: A list of tokens extracted from the input string.
     """
+    if len(string) > MAX_EXPRESSION_LENGTH:
+        raise PostfixTokenEvaluationException(
+            'Expression exceeds the limit'
+        )
+
     # Set all words to lowercase
     string = string.lower()
 
@@ -797,6 +859,11 @@ def parse(
         - Each expression must use terms from a single language
         - Division by zero returns 'undefined' instead of raising an exception
     """
+    if len(string) > MAX_EXPRESSION_LENGTH:
+        raise PostfixTokenEvaluationException(
+            'Expression exceeds the limit'
+        )
+
     if language:
         if language == 'CHI':
             string = replace_word_tokens_simplified_chinese(
