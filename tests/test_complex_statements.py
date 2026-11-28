@@ -141,6 +141,19 @@ class ComplexStatementsTestCase(TestCase):
         self.assertEqual(mathparse.parse('2 ^ -3'), 0.125)
         self.assertEqual(mathparse.parse('1.0 ^ 10000'), 1)
 
+    def test_reasonable_decimal_powers_are_allowed(self):
+        """
+        Estimate Decimal power size closely enough to allow safe results.
+        """
+        self.assertEqual(
+            mathparse.parse('(2 / 1) ^ 10000'),
+            Decimal('2') ** 10000,
+        )
+        self.assertEqual(
+            mathparse.parse('(99 / 100) ^ -10000'),
+            Decimal('0.99') ** -10000,
+        )
+
     def test_oversized_integer_results_are_rejected(self):
         """
         Reject oversized products before division or decimal-point conversion.
@@ -156,3 +169,37 @@ class ComplexStatementsTestCase(TestCase):
                     mathparse.PostfixTokenEvaluationException
                 ):
                     mathparse.parse(expression)
+
+    def test_oversized_integer_literals_are_rejected(self):
+        """
+        Reject oversized integer tokens both alone and as operands.
+        """
+        oversized_integer = '9' * 4001
+        expressions = (
+            oversized_integer,
+            oversized_integer + ' + 1',
+        )
+        for expression in expressions:
+            with self.subTest(expression_length=len(expression)):
+                with self.assertRaises(
+                    mathparse.PostfixTokenEvaluationException
+                ):
+                    mathparse.parse(expression)
+
+        largest_allowed_integer = '9' * 4000
+        self.assertEqual(
+            mathparse.parse(largest_allowed_integer),
+            int(largest_allowed_integer),
+        )
+
+    def test_oversized_expressions_are_rejected(self):
+        """
+        Bound input work through both parse and the public tokenizer.
+        """
+        expression = '1+' * (mathparse.MAX_EXPRESSION_LENGTH // 2) + '1'
+        self.assertGreater(len(expression), mathparse.MAX_EXPRESSION_LENGTH)
+
+        with self.assertRaises(mathparse.PostfixTokenEvaluationException):
+            mathparse.parse(expression)
+        with self.assertRaises(mathparse.PostfixTokenEvaluationException):
+            mathparse.tokenize(expression)

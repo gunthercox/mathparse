@@ -1,7 +1,7 @@
 """
 Methods for evaluating mathematical equations in strings.
 """
-from decimal import Decimal, DecimalException
+from decimal import Decimal, DecimalException, localcontext
 import math
 from typing import Union
 from . import mathwords
@@ -16,32 +16,53 @@ class PostfixTokenEvaluationException(Exception):
 
 
 MAX_POWER_EXPONENT = 10000
-MAX_POWER_RESULT_DIGITS = 4000
-MAX_RESULT_BITS = int(MAX_POWER_RESULT_DIGITS * math.log2(10))
+MAX_RESULT_DIGITS = 4000
+MAX_EXPRESSION_LENGTH = 10000
+MAX_RESULT_BITS = int(MAX_RESULT_DIGITS * math.log2(10))
 
 
 def evaluate_power(base, exponent):
     """
     Evaluate a power after checking its exponent and estimated result size.
     """
+    if (
+        isinstance(exponent, Decimal) and not exponent.is_finite()
+    ) or (
+        isinstance(exponent, float) and not math.isfinite(exponent)
+    ):
+        raise PostfixTokenEvaluationException('Non-finite power exponent')
+
     if abs(exponent) > MAX_POWER_EXPONENT:
         raise PostfixTokenEvaluationException('Exponent exceeds the limit')
 
     if isinstance(base, Decimal):
         if not base.is_finite():
             raise PostfixTokenEvaluationException('Non-finite power base')
-        if base and base.copy_abs() != 1:
-            magnitude = base.copy_abs().adjusted()
-            log_magnitude = magnitude + 1 if magnitude >= 0 else magnitude
-        else:
-            log_magnitude = 0
-    elif base:
-        log_magnitude = math.log10(abs(base))
+        absolute_base = base.copy_abs()
     else:
-        log_magnitude = 0
+        if isinstance(base, float) and not math.isfinite(base):
+            raise PostfixTokenEvaluationException('Non-finite power base')
+        absolute_base = Decimal(str(abs(base)))
 
-    if float(exponent) * log_magnitude >= MAX_POWER_RESULT_DIGITS:
-        raise PostfixTokenEvaluationException('Power result exceeds the limit')
+    try:
+        with localcontext() as context:
+            context.prec = 50
+            if absolute_base in (Decimal(0), Decimal(1)):
+                estimated_digits = Decimal(0)
+            else:
+                estimated_digits = (
+                    Decimal(str(exponent)) * absolute_base.log10()
+                )
+            if estimated_digits >= (
+                Decimal(MAX_RESULT_DIGITS) - Decimal('1e-35')
+            ):
+                raise PostfixTokenEvaluationException(
+                    'Power result exceeds the limit'
+                )
+    except DecimalException as e:
+        raise PostfixTokenEvaluationException(
+            'Unable to estimate power result'
+        ) from e
 
     try:
         return base ** exponent
@@ -134,7 +155,17 @@ def to_number(val) -> Union[int, float, str, Decimal]:
 
     # Otherwise, try to convert string to number
     if is_int(val):
-        return int(val)
+        digit_count = len(val) - int(val.startswith('-'))
+        if digit_count > MAX_RESULT_DIGITS:
+            raise PostfixTokenEvaluationException(
+                'Integer exceeds the limit'
+            )
+        try:
+            return int(val)
+        except ValueError as e:
+            raise PostfixTokenEvaluationException(
+                'Unable to parse integer'
+            ) from e
     elif is_float(val):
         return float(val)
 
@@ -671,7 +702,7 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
     # Convert final result from string to number if needed
     if isinstance(result, str):
         if is_int(result):
-            result = int(result)
+            result = to_number(result)
         elif is_float(result):
             result = float(result)
 
@@ -696,6 +727,11 @@ def tokenize(string: str, language: str = None, escape: str = '___') -> list:
     Returns:
         list: A list of tokens extracted from the input string.
     """
+    if len(string) > MAX_EXPRESSION_LENGTH:
+        raise PostfixTokenEvaluationException(
+            'Expression exceeds the limit'
+        )
+
     # Set all words to lowercase
     string = string.lower()
 
@@ -823,6 +859,11 @@ def parse(
         - Each expression must use terms from a single language
         - Division by zero returns 'undefined' instead of raising an exception
     """
+    if len(string) > MAX_EXPRESSION_LENGTH:
+        raise PostfixTokenEvaluationException(
+            'Expression exceeds the limit'
+        )
+
     if language:
         if language == 'CHI':
             string = replace_word_tokens_simplified_chinese(
