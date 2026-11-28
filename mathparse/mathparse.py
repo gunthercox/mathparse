@@ -17,6 +17,7 @@ class PostfixTokenEvaluationException(Exception):
 
 MAX_POWER_EXPONENT = 10000
 MAX_POWER_RESULT_DIGITS = 4000
+MAX_RESULT_BITS = int(MAX_POWER_RESULT_DIGITS * math.log2(10))
 
 
 def evaluate_power(base, exponent):
@@ -653,6 +654,10 @@ def evaluate_postfix(tokens: list) -> Union[int, float, str, Decimal]:
                 )
 
         if total is not None:
+            if isinstance(total, int) and total.bit_length() > MAX_RESULT_BITS:
+                raise PostfixTokenEvaluationException(
+                    'Result exceeds the limit'
+                )
             stack.append(total)
 
     # If the stack is empty the tokens could not be evaluated

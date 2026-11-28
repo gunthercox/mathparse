@@ -140,3 +140,19 @@ class ComplexStatementsTestCase(TestCase):
         self.assertEqual(mathparse.parse('2 ^ 10000'), 2 ** 10000)
         self.assertEqual(mathparse.parse('2 ^ -3'), 0.125)
         self.assertEqual(mathparse.parse('1.0 ^ 10000'), 1)
+
+    def test_oversized_integer_results_are_rejected(self):
+        """
+        Reject oversized products before division or decimal-point conversion.
+        """
+        expressions = (
+            '2 ^ 10000 * 2 ^ 10000',
+            '(2 ^ 10000 * 2 ^ 10000) / 3',
+            '(2 ^ 10000 * 2 ^ 10000) . 5',
+        )
+        for expression in expressions:
+            with self.subTest(expression=expression):
+                with self.assertRaises(
+                    mathparse.PostfixTokenEvaluationException
+                ):
+                    mathparse.parse(expression)
